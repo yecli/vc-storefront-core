@@ -1,0 +1,10 @@
+<div class="head-top" ng-hide="!customer.isRegisteredUser" ng-init="company = { imageUrl: 'http://localhost/admin/assets/images/logoVC.png', name: 'Company name', phone: '+155512345678', email: 'test@example.org' }" ng-cloak>
+	<div class="wrapper">
+        <img class="head-top-logo" ng-src="{% raw %}{{ company.imageUrl }}{% endraw %}">
+        <div class="head-top-info">
+            <strong ng-bind="company.name"></strong><br>
+            <span><strong>Phone: </strong>{% raw %}{{ company.phone }}{% endraw %}</span>
+            <span><strong>Email: </strong><a ng-href="{% raw %}{{ 'mailto:' + company.email }}{% endraw %}" ng-bind="company.email"></a></span>
+        </div>
+	</div>
+</div>

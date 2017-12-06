@@ -1,4 +1,4 @@
-﻿/*============================================================================
+/*============================================================================
   Virto Commerce Default Theme based on Timber v1.4.0
   Built with Sass - http://sass-lang.com/
 
@@ -74,24 +74,25 @@ $breakpoint-has-pull:  ('medium', 'medium-down', 'large');
 $colorPrimary: {{ settings.color_primary }};
 $colorSecondary: {{ settings.color_secondary }};
 $colorAccent: {{ settings.color_accent }};
+$colorContrast: {{ settings.color_contrast }};
 
 // Button colors
 $colorBtnPrimary: $colorPrimary;
-$colorBtnPrimaryHover: darken($colorBtnPrimary, 5%);
+$colorBtnPrimaryHover: $colorBtnPrimary;
 $colorBtnPrimaryActive: darken($colorBtnPrimaryHover, 5%);
 
 $colorBtnSecondary: $colorSecondary;
-$colorBtnSecondaryHover: darken($colorBtnSecondary, 5%);
+$colorBtnSecondaryHover: $colorBtnSecondary;
 $colorBtnSecondaryActive: darken($colorBtnSecondaryHover, 5%);
-
-// Text link colors
-$colorLink: $colorPrimary;
-$colorLinkHover: lighten($colorPrimary, 15%);
 
 // General colors
 $colorBody: {{ settings.color_body_bg }};
 $colorTextBody: {{ settings.color_body_text }};
 $colorHeaders: {{ settings.color_heading_text }};
+
+// Text link colors
+$colorLink: $colorPrimary;
+$colorLinkHover: darken($colorPrimary, 15%);
 
 // Border colors
 $colorBorder: {{ settings.color_borders }};
@@ -122,7 +123,7 @@ $errorRedBg: lighten($errorRed, 55%);
 $successGreen: #0a942a;
 
 // Width variables
-$siteWidth: 1060px;
+$siteWidth: 1280px;
 $gutter: 30px;
 $gridGutter: 30px;
 $maxWidthBp: $siteWidth + $gutter*2;
@@ -314,9 +315,20 @@ $push:               true;
 $pull:               false;
 
 /* Force clearfix on grids */
-.grid,
-.grid-uniform {
+.grid {
   @include clearfix;
+}
+
+.grid-uniform {
+  display: flex;
+  flex-wrap: wrap;
+
+  @include clearfix;
+
+  .grid-item {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 /* Manual grid-item clearfix */
@@ -1105,7 +1117,7 @@ pre {
 /*================ Horizontal Rules ================*/
 hr {
   clear: both;
-  border-top: solid $colorBorder;
+  border-top: solid transparent;
   border-width: 1px 0 0;
   margin: $gutter 0;
   height: 0;
@@ -1119,7 +1131,7 @@ hr {
   }
 
   footer & {
-    border-top-color: darken($colorFooterBg, 5%);
+    border-top-color: transparent;
   }
 
   @include at-query ($min, $large) {
@@ -1323,17 +1335,18 @@ html input[disabled] {
 
   /*================ Set primary button colors - can override later ================*/
   background-color: $colorBtnPrimary;
-  color: #fff;
+  color: $colorContrast;
 
-  &:hover {
+  &:hover,
+  &:focus {
     background-color: $colorBtnPrimaryHover;
-    color: #fff;
+    color: $colorContrast;
     @include transition(background-color 0.05s ease-in);
   }
 
   &:active {
    background-color: $colorBtnPrimaryActive;
-   color: #fff;
+   color: $colorContrast;
   }
 
   &[disabled],
@@ -1348,16 +1361,16 @@ html input[disabled] {
 input.btn-secondary {
   @extend .btn;
   background-color: $colorBtnSecondary;
-  color: $colorTextBody;
+  color: $colorContrast;
 
   &:hover {
     background-color: $colorBtnSecondaryHover;
-    color: $colorTextBody;
+    color: $colorContrast;
   }
 
   &:active {
    background-color: $colorBtnSecondaryActive;
-    color: $colorTextBody;
+    color: $colorContrast;
   }
 }
 
@@ -2263,11 +2276,11 @@ $shareBorderColor: #ececec;
   position: relative;
   line-height: 26px;
   padding-bottom: 10px;
-  border: 0 none;
   margin-left: $gutter/2;
   vertical-align: top;
   background-color: $headerButtonAndSearch;
-  color: color-control($headerButtonAndSearch);
+  border-color: $colorBorder;
+  color: $headerText;
 
   @include at-query ($max, $medium) {
     display: none;
@@ -2275,7 +2288,7 @@ $shareBorderColor: #ececec;
 
   &:hover,
   &:focus {
-    color: color-control($headerButtonAndSearch);
+    color: $headerText;
     background-color: darken($headerButtonAndSearch, 5%);
   }
 }
@@ -2383,12 +2396,11 @@ $shareBorderColor: #ececec;
 
     input[type="text"],
     input[type="search"] {
-      border: 0 none;
       background-color: $headerButtonAndSearch;
-      color: color-control($headerButtonAndSearch);
+      color: $headerText;
       @include transition(background-color 0.2s ease-out);
       &:hover, &:focus {
-        background-color: darken($headerButtonAndSearch, 5%);
+        background-color: darken($headerButtonAndSearch, 2.5%);
         @include transition(background-color 0.05s ease-in);
       }
       &:focus {
@@ -2399,11 +2411,11 @@ $shareBorderColor: #ececec;
 }
 
 .site-header input::-webkit-input-placeholder {
-  color: color-control($headerButtonAndSearch);
+  color: $headerText;
 }
 
 .site-header input::-moz-placeholder {
-  color: color-control($headerButtonAndSearch);
+  color: $headerText;
 }
 
 /*============================================================================
@@ -2584,18 +2596,15 @@ $shareBorderColor: #ececec;
     }
 
     a {
-      color: $colorPrimary;
+      color: $colorTextBody;
       text-transform: none;
       padding: $gutter/3 $gutter*1.5 $gutter/3 $gutter/2;
 
       &:hover,
       &:active,
       &:focus {
-        color: darken($colorPrimary, 10%);
-      }
-
-      &:focus {
         background-color: darken($colorBody, 5%);
+        color: darken($colorTextBody, 10%);
       }
     }
   }
@@ -2854,6 +2863,9 @@ a.product-grid-item,
   display: block;
   color: $colorTextBody;
   margin-bottom: $gutter*2;
+  box-shadow: 0 6px 13px 2px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  padding: 15px;
 
   &:hover img {
     opacity: 0.9;
@@ -2924,6 +2936,9 @@ a.product-grid-item,
   padding: $gutter/2 0;
   border: 1px solid $colorBorder;
   margin-bottom: $gutter;
+  box-shadow: 0 6px 13px 2px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  padding: 15px;
 
   &:after {
     content: '';
@@ -2932,7 +2947,7 @@ a.product-grid-item,
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,.02);
+    background-color: rgba(0,0,0,.01);
     z-index: 5;
   }
 
@@ -2955,6 +2970,7 @@ a.product-grid-item,
 .featured-box--image {
   display: table-cell;
   vertical-align: middle;
+  height: 116px;
 
   img {
     width: 100%;
@@ -3293,10 +3309,12 @@ $innerFilterIconWidth: 6px;
   }
 
   a {
+    background-color: $colorBody;
     color: $colorTextBody;
 
     &:hover {
-      color: $colorPrimary;
+      background-color: darken($colorBody, 5%);
+      color: darken($colorTextBody, 5%);
     }
   }
 }
@@ -3325,18 +3343,18 @@ $innerFilterIconWidth: 6px;
 }
 
 /*================ Remove from cart icon ================*/
-$removeIconWidth: 19px;
+$removeIconWidth: 20px;
 
 a.remove {
   display: inline-block;
   margin-top: 7px;
   height: $removeIconWidth;
-  line-height: $removeIconWidth;
+  line-height: $removeIconWidth - 2px;
   padding: 0 5px;
   border-radius: $removeIconWidth;
-  font-size: 9px;
+  font-size: 8px;
   text-align: center;
-  border: 0 none;
+  border: 1px solid $colorBorder;
 
   .supports-fontface & {
     padding: 0;
@@ -3712,9 +3730,32 @@ html[xmlns] .slides { display: block; }
 .head-top
 {
 	background: $headerBackgroundTop;
-    height: 30px;
+    color: $headerTextTop;
+	font-size: 15px;
+    line-height: 22.5px;
+    height: 65px;
     position: relative;
     z-index: 99998;
+
+    a,
+    a:hover,
+    a:focus {
+        color: $headerTextTop;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+    }
+
+    a {
+        border-bottom-color: rgba($headerTextTop, 0.5);
+    }
+
+    a:hover,
+    a:focus {
+        color: $headerTextTop;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+        border-bottom-color: $headerTextTop;
+    }
 }
 
 @include at-query ($max, $medium) {
@@ -3724,108 +3765,17 @@ html[xmlns] .slides { display: block; }
 	}
 }
 
-.head-switch
-{
-	float: left;
-	font-size: 12px;
-    line-height: 30px;
-    margin-right: 5px;
+.head-top-logo {
+    border-radius: 50%;
+    margin: 10px;
+    width: 45px;
+    height: 45px;
+    vertical-align: top;
 }
 
-.head-switch:hover
-{
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-}
-
-.head-switch > span
-{
-	color: $headerText;
-    display: block;
-    padding: 0 10px;
-    position: relative;
-    z-index: 6;
-	-webkit-transition: all .3s ease-in-out 0s;
-			transition: all .3s ease-in-out 0s;
-}
-
-.head-switch .current
-{
-	background: url('arrow_switch.png') no-repeat scroll 100% 50%;
-	color: $headerTextTop;
-    padding: 0 12px 0 5px;
-}
-
-.current .flag
-{
-	float: none;
-    left: 0;
-    margin-right: 5px;
-    top: -1px;
-}
-
-.head-switch ul
-{
-	background: $headerBackgroundTop;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-    min-width: 140px;
-    opacity: 0;
-    padding: 14px;
-    position: absolute;
-    visibility: hidden;
-    z-index: 5;
-	-webkit-transition: all .3s ease-in-out 0s;
-			transition: all .3s ease-in-out 0s;
-}
-
-.head-switch:hover > ul
-{
-    opacity: 1;
-    visibility: visible;
-}
-
-.head-switch ul li
-{
-	color: $headerText;
-    cursor: pointer;
-    line-height: 28px;
-    padding: 2px 0;
-    position: relative;
-}
-
-.head-switch ul ul
-{
-    left: 95%;
-    margin-left: 13px;
-    padding: 5px;
-    top: 0;
-    visibility: hidden;
-}
-
-.head-switch ul li:hover ul
-{
-    opacity: 1;
-    visibility: visible;
-}
-
-.head-switch .language ul li a
-{
-    background-position: 10px 50%;
-    background-repeat: no-repeat;
-    padding: 0 9px 0 35px;
-}
-
-.head-switch ul li a
-{
-    color: #8c8c8c;
-    display: block;
-    padding: 0 9px;
-	-webkit-transition: all .3s ease-in-out 0s;
-			transition: all .3s ease-in-out 0s;
-}
-
-.head-switch ul li.selected a
-{
-    color: $headerText;
+.head-top-info {
+    display: inline-block;
+    margin: 10px;
 }
 
 

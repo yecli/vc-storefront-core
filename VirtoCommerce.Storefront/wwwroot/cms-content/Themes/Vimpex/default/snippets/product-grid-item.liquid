@@ -1,4 +1,4 @@
-﻿{% unless grid_item_width %}
+{% unless grid_item_width %}
     {% assign grid_item_width = 'large--one-quarter medium-down--one-half' %}
 {% endunless %}
 
@@ -62,11 +62,13 @@
                         {% endif %}
                     </span>
                 {% endif %}
-                {% if settings.show_prices_with_taxes %}
-                    {% include 'price' with product.price_with_tax %}
-                {% else %}
-                    {% include 'price' with product.price %}
-                {% endif %}            
+                {% if customer %}
+                    {% if settings.show_prices_with_taxes %}
+                        {% include 'price' with product.price_with_tax %}
+                    {% else %}
+                        {% include 'price' with product.price %}
+                    {% endif %}
+                {% endif %}
             </span>
             {% if on_sale %}
                 <span class="sale-tag medium--right{% if settings.product_reviews_enable %} has-reviews{% endif %}">
@@ -101,8 +103,6 @@
                     </span>
                     <span class="sale-tag medium--right" ng-if="productListPrices['{{ product.id }}'].discountAmount.amount > 0" ng-bind="'{{ 'products.general.save_html' | t }}'  + productListPrices['{{ product.id }}'].discountAmount.formattedAmount"></span>
                 {% endif %}
-            {% else %}
-                <a class="btn" href="{{ '/account/login' | absolute_url }}">{{ 'products.product.sign_in_to_see_price' | t }}</a>
             {% endif %}
         </div>
 
@@ -120,4 +120,7 @@
             <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
         {% endif %}
     </a>
+    {% unless customer %}
+        <a class="btn" href="{{ '/account/login' | absolute_url }}">{{ 'products.product.sign_in_to_see_price' | t }}</a>
+    {% endunless %}
 </div>

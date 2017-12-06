@@ -95,7 +95,7 @@ select {
 }
 
     .vc-form .form-input:focus {
-        box-shadow: 0 0 0 2px #686868;
+        box-shadow: 0 0 0 2px #017b3c;
     }
 
 .vc-form .form-group.keyuped .form-label {
@@ -175,7 +175,7 @@ select {
         }
 
         .vc-btn.loading .btn-loading {
-            border: 3px solid #686868;
+            border: 3px solid #017b3c;
             border-top-color: transparent;
             border-radius: 50%;
             box-sizing: border-box;
@@ -209,7 +209,7 @@ select {
 .vc-btn:focus,
 .vc-btn:active {
     color: #0f0f0f;
-    box-shadow: 0 0 0 2px #686868 inset;
+    box-shadow: 0 0 0 2px #017b3c inset;
 }
 
 .vc-form .form-input::-webkit-input-placeholder {
@@ -261,7 +261,7 @@ select {
 }
 
 .vc-form .form-box .radio:checked ~ .switch::after {
-    border: 7px solid #686868;
+    border: 7px solid #017b3c;
     border-radius: 50%;
     box-sizing: border-box;
     bottom: -1px;
@@ -286,8 +286,8 @@ select {
 }
 
 .vc-form .form-box .check:checked ~ .switch {
-    background: #1990c6;
-    border: 1px solid #686868;
+    background: #017b3c;
+    border: 1px solid #017b3c;
 }
 
     .vc-form .form-box .check:checked ~ .switch::after {
