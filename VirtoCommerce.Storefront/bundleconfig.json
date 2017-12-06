@@ -1,24 +1,85 @@
 ﻿// Configure bundling and minification for the project.
 // More info at https://go.microsoft.com/fwlink/?LinkId=808241
 [
-  {
-    "outputFileName": "wwwroot/css/site.min.css",
-    // An array of relative input file paths. Globbing patterns supported
-    "inputFiles": [
-      "wwwroot/css/site.css"
-    ]
-  },
-  {
-    "outputFileName": "wwwroot/js/site.min.js",
-    "inputFiles": [
-      "wwwroot/js/site.js"
-    ],
-    // Optionally specify minification options
-    "minify": {
-      "enabled": true,
-      "renameLocals": true
+    {
+        "outputFileName": "wwwroot/css/site.min.css",
+        // An array of relative input file paths. Globbing patterns supported
+        "inputFiles": [
+            "wwwroot/css/site.css"
+        ]
     },
-    // Optionally generate .map file
-    "sourceMap": false
-  }
+    {
+        "outputFileName": "wwwroot/js/site.min.js",
+        "inputFiles": [
+            "wwwroot/js/site.js"
+        ],
+        // Optionally specify minification options
+        "minify": {
+            "enabled": true,
+            "renameLocals": true
+        },
+        // Optionally generate .map file
+        "sourceMap": false
+    },
+    {
+        "outputFileName": "wwwroot/cms-content/Themes/Vimpex/default/assets/static/bundle/scripts.js",
+        "inputFiles": [
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/modernizr.min.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/interactor.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/ideal-image-slider.min.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/ideal-image-slider-bullet-nav.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/ideal-image-slider-captions.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/*.js"
+        ]
+    },
+    {
+        "outputFileName": "wwwroot/cms-content/Themes/Vimpex/default/assets/static/bundle/checkout-scripts.js",
+        "inputFiles": [
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/services.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/directives.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/filters.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/main.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/common-components/(!roles).js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/checkout/*.js",
+        ]
+    },
+    {
+        "outputFileName": "wwwroot/cms-content/Themes/Vimpex/default/assets/static/bundle/account-scripts.js",
+        "inputFiles": [
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/modernizr.min.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/errors.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/services.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/main.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/cart.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/quote-request.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/product-compare.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/searchBar.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/common-components/*.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/account/*.js",
+        ],
+        "sourceMap": true
+    },
+    {
+        "outputFileName": "wwwroot/cms-content/Themes/Vimpex/default/assets/static/bundle/styles.css",
+        "inputFiles": [
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/storefront.css",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/common-components.css",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/ideal-image-slider.css",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/ideal-image-slider-default-theme.css"
+        ]
+    },
+    {
+        "outputFileName": "wwwroot/cms-content/Themes/Vimpex/default/assets/static/bundle/checkout-styles.css",
+        "inputFiles": [
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/common-components.css"
+        ]
+    },
+    {
+        "outputFileName": "wwwroot/cms-content/Themes/Vimpex/default/assets/static/bundle/account-styles.css",
+        "inputFiles": [
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/account-bootstrap.css",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/common-components.css"
+        ]
+    }
+
 ]

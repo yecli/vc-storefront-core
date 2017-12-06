@@ -40,6 +40,8 @@ using VirtoCommerce.Storefront.Model.Subscriptions.Services;
 using VirtoCommerce.Storefront.Model.Tax.Services;
 using VirtoCommerce.Storefront.Routing;
 using VirtoCommerce.Tools;
+using VirtoCommerce.Storefront.Model.Wholesaler;
+using VirtoCommerce.Storefront.Domain.Wholesaler;
 
 namespace VirtoCommerce.Storefront
 {
@@ -72,7 +74,7 @@ namespace VirtoCommerce.Storefront
             services.AddSingleton<IStoreService, StoreService>();
             services.AddSingleton<ICurrencyService, CurrencyService>();
             services.AddSingleton<ISlugRouteService, SlugRouteService>();
-            services.AddSingleton<IMemberService, MemberService>();
+            //services.AddSingleton<IMemberService, MemberService>();
             services.AddSingleton<ICustomerOrderService, CustomerOrderService>();
             services.AddSingleton<IQuoteService, QuoteService>();
             services.AddSingleton<ISubscriptionService, SubscriptionService>();
@@ -91,6 +93,7 @@ namespace VirtoCommerce.Storefront
             services.AddSingleton<IRecommendationProviderFactory, RecommendationProviderFactory>(provider => new RecommendationProviderFactory(provider.GetService<AssociationRecommendationsProvider>(), provider.GetService<CognitiveRecommendationsProvider>()));
             services.AddTransient<IQuoteRequestBuilder, QuoteRequestBuilder>();
             services.AddTransient<ICartBuilder, CartBuilder>();
+            services.AddTransient<IMemberService, WholesalerMemberService>();
 
             //Register events framework dependencies
             services.AddSingleton(new InProcessBus());

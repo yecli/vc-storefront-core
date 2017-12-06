@@ -4,6 +4,8 @@ using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Order;
 using VirtoCommerce.Storefront.Model.Quote;
 using VirtoCommerce.Storefront.Model.Subscriptions;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.Storefront.Model.Customer
 {
@@ -41,6 +43,8 @@ namespace VirtoCommerce.Storefront.Model.Customer
         /// Returns the default customer_address.
         /// </summary>
         public Address DefaultAddress { get; set; }
+
+        public IList<string> Organizations { get; set; }
 
         [JsonIgnore]
         [IgnoreDataMember]

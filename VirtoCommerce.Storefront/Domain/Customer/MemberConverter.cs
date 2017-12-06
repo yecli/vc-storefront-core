@@ -162,6 +162,10 @@ namespace VirtoCommerce.Storefront.Domain
             {
                 result.DynamicProperties = contactDto.DynamicProperties.Select(ToDynamicProperty).ToList();
             }
+            if(!contactDto.Organizations.IsNullOrEmpty())
+            {
+                result.Organizations = contactDto.Organizations;
+            }
 
             return result;
         }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VirtoCommerce.Storefront.Model.Customer;
 
 namespace VirtoCommerce.Storefront.Model.Security
 {
@@ -14,5 +15,8 @@ namespace VirtoCommerce.Storefront.Model.Security
         public string UserName { get; set; }
         [FromForm(Name = "customer[password]")]
         public string Password { get; set; }
+
+        [FromBody]
+        public Contact Contact { get; set; }
     }
 }

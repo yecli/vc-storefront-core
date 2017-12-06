@@ -14,6 +14,11 @@ namespace VirtoCommerce.Storefront.Routing
         {
             #region Storefront API routes
 
+            // API wholesalers
+            routes.MapStorefrontRoute("API.GetWholesalers", "storefrontapi/wholesalers", defaults: new { controller = "ApiWholesaler", action = "GetWholesalers" });
+            routes.MapStorefrontRoute("API.SendDeliveryAggrement", "storefrontapi/wholesaler/{wholesalerId}/agreement/send", defaults: new { controller = "ApiWholesaler", action = "SendDeliveryAggrement" });
+            routes.MapStorefrontRoute("API.ConfirmAgreement", "storefrontapi/wholesaler/{wholesalerId}/agreement/confirm", defaults: new { controller = "ApiWholesaler", action = "ConfirmDeliveryAggrement" });
+
             // API cart
             routes.MapStorefrontRoute("API.GetCart", "storefrontapi/cart", defaults: new { controller = "ApiCart", action = "GetCart" });
             routes.MapStorefrontRoute("API.Cart.GetCartItemsCount", "storefrontapi/cart/itemscount", defaults: new { controller = "ApiCart", action = "GetCartItemsCount" });
