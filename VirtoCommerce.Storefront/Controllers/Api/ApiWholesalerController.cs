@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Common.Events;
+using VirtoCommerce.Storefront.Model.Wholesaler;
 using VirtoCommerce.Storefront.Model.Wholesaler.Events;
 
 namespace VirtoCommerce.Storefront.Controllers.Api
@@ -17,39 +18,36 @@ namespace VirtoCommerce.Storefront.Controllers.Api
             _publisher = publisher;
         }
 
-        // POST: storefrontapi/wholesaler/{wholesalerId}/agreement/confirm
+
+        // POST: storefrontapi/wholesalers/{wholesalerId}/agreement/send
         [HttpPost]
-        public ActionResult ConfirmDeliveryAggrement(string wholesalerId)
+        public ActionResult SendDeliveryAggrement([FromBody] DeliveryAgreementRequest agreement)
         {
-            var wholesaler = WorkContext.CurrentUser?.Contact?.Value?.Wholesalers?.FirstOrDefault(x => x.Id == wholesalerId);
-            if (wholesaler != null)
-            {
-                wholesaler.AgreementRequest.ConfirmedDate = DateTime.UtcNow;
-                wholesaler.AgreementRequest.Status = Model.Wholesaler.DeliveryAgreementStatus.Confirmed;
-                _publisher.Publish(new ConfirmDeliveryAgreementEvent(WorkContext, WorkContext.CurrentUser.Contact.Value, wholesaler.AgreementRequest));
-            }
+            _publisher.Publish(new SendDeliveryAgreementEvent(WorkContext, agreement));            
             return NoContent();
         }
-
-        // POST: storefrontapi/wholesaler/{wholesalerId}/agreement/send
-        [HttpPost]
-        public ActionResult SendDeliveryAggrement(string wholesalerId)
+        // GET storefrontapi/wholesalers/{wholesalerId}/select
+        [HttpGet]
+        public ActionResult SelectWholesaler(string wholesalerId)
         {
-            var wholesaler = WorkContext.CurrentUser?.Contact?.Value?.Wholesalers?.FirstOrDefault(x => x.Id == wholesalerId);
+            var wholesalers = WorkContext.CurrentUser?.Contact?.Value?.Wholesalers;
+            foreach (var activeWholesaler in wholesalers.Where(x => x.IsActive))
+            {
+                activeWholesaler.IsActive = false;
+            }
+            var wholesaler = wholesalers.FirstOrDefault(x => x.Id == wholesalerId);
             if (wholesaler != null)
             {
-                wholesaler.AgreementRequest.SentDate = DateTime.UtcNow;
-                wholesaler.AgreementRequest.Status = Model.Wholesaler.DeliveryAgreementStatus.Sent;
-                _publisher.Publish(new SendDeliveryAgreementEvent(WorkContext, WorkContext.CurrentUser.Contact.Value, wholesaler.AgreementRequest));
+                wholesaler.IsActive = true;
             }
-            return NoContent();
+            return Ok();
         }
 
         // GET: storefrontapi/wholesalers
         [HttpGet]
         public ActionResult GetWholesalers()
         {
-           var result =  WorkContext.CurrentUser?.Contact?.Value?.Wholesalers;
+           var result =  WorkContext.CurrentUser?.Contact?.Value?.Wholesalers.ToArray();
            return Json(result);
             
         }

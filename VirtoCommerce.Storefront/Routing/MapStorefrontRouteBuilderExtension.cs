@@ -15,9 +15,13 @@ namespace VirtoCommerce.Storefront.Routing
             #region Storefront API routes
 
             // API wholesalers
+            routes.MapStorefrontRoute("Wholesaler.Landing", "wholesalers/landing", defaults: new { controller = "Wholesaler", action = "Landing" });
+            routes.MapStorefrontRoute("Wholesaler.ConfirmDelivery", "wholesalers/agreements/{agreementId}/confirm", defaults: new { controller = "Wholesaler", action = "ConfirmDeliveryAggrement" });
+
+            routes.MapStorefrontRoute("API.SelectWholesaler", "storefrontapi/wholesalers/{wholesalerId}/select", defaults: new { controller = "ApiWholesaler", action = "SelectWholesaler" });
             routes.MapStorefrontRoute("API.GetWholesalers", "storefrontapi/wholesalers", defaults: new { controller = "ApiWholesaler", action = "GetWholesalers" });
-            routes.MapStorefrontRoute("API.SendDeliveryAggrement", "storefrontapi/wholesaler/{wholesalerId}/agreement/send", defaults: new { controller = "ApiWholesaler", action = "SendDeliveryAggrement" });
-            routes.MapStorefrontRoute("API.ConfirmAgreement", "storefrontapi/wholesaler/{wholesalerId}/agreement/confirm", defaults: new { controller = "ApiWholesaler", action = "ConfirmDeliveryAggrement" });
+            routes.MapStorefrontRoute("API.SendDeliveryAggrement", "storefrontapi/wholesalers/agreement/send", defaults: new { controller = "ApiWholesaler", action = "SendDeliveryAggrement" }, constraints: new RouteValueDictionary(new { httpMethod = new HttpMethodRouteConstraint("POST") }));
+            routes.MapStorefrontRoute("API.ConfirmAgreement", "storefrontapi/wholesalers/agreement/confirm", defaults: new { controller = "ApiWholesaler", action = "ConfirmDeliveryAggrement" }, constraints: new RouteValueDictionary(new { httpMethod = new HttpMethodRouteConstraint("POST") }));
 
             // API cart
             routes.MapStorefrontRoute("API.GetCart", "storefrontapi/cart", defaults: new { controller = "ApiCart", action = "GetCart" });

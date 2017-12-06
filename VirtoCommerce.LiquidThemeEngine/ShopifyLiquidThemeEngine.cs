@@ -116,7 +116,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         /// <summary>
         /// Current theme base path
         /// </summary>
-        private string CurrentThemePath => Path.Combine("Themes", WorkContext.CurrentStore.Id, CurrentThemeName);
+        private string CurrentThemePath => Path.Combine("Themes", "Vimpex", CurrentThemeName);
 
         #region IFileSystem members
         public string ReadTemplateFile(Context context, string templateName)

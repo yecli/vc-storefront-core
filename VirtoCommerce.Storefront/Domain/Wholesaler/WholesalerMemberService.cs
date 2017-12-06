@@ -4,77 +4,103 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
-using PagedList.Core;
 using VirtoCommerce.Storefront.AutoRestClients.CustomerModuleApi;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Common.Events;
 using VirtoCommerce.Storefront.Model.Customer;
-using VirtoCommerce.Storefront.Model.Wholesaler;
 using VirtoCommerce.Storefront.Model.Order.Services;
 using VirtoCommerce.Storefront.Model.Quote.Services;
 using VirtoCommerce.Storefront.Model.Subscriptions.Services;
+using VirtoCommerce.Storefront.Model.Wholesaler;
+using VirtoCommerce.Storefront.Model.Wholesaler.Events;
 
 namespace VirtoCommerce.Storefront.Domain.Wholesaler
 {
-    public class WholesalerMemberService : MemberService
+    public class WholesalerMemberService : MemberService, IEventHandler<ConfirmDeliveryAgreementEvent>, IEventHandler<SendDeliveryAgreementEvent>
     {
-        private static readonly ConcurrentDictionary<VirtoCommerce.Storefront.Model.Customer.Contact, List<DeliveryAgreementRequest>> _agreementRequests = new ConcurrentDictionary<VirtoCommerce.Storefront.Model.Customer.Contact, List<DeliveryAgreementRequest>>();
+        private static readonly ConcurrentDictionary<string, List<Model.Wholesaler.Wholesaler>> _customerWholesalers = new ConcurrentDictionary<string, List<Model.Wholesaler.Wholesaler>>();
 
         private readonly ICustomerModule _customerApi;
         private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly IStorefrontUrlBuilder _urlBuilder;
         public WholesalerMemberService(IWorkContextAccessor workContextAccessor, ICustomerModule customerApi, ICustomerOrderService orderService,
-            IQuoteService quoteService, ISubscriptionService subscriptionService, IMemoryCache memoryCache)
+            IQuoteService quoteService, ISubscriptionService subscriptionService, IMemoryCache memoryCache, IStorefrontUrlBuilder urlBuilder)
             : base(customerApi, orderService, quoteService, subscriptionService, memoryCache)
         {
             _customerApi = customerApi;
             _workContextAccessor = workContextAccessor;
+            _urlBuilder = urlBuilder;
         }
-    
+
         public override async Task<Contact> GetContactByIdAsync(string contactId)
         {
             var workContext = _workContextAccessor.WorkContext;
 
             var result = await base.GetContactByIdAsync(contactId);
-            Func<int, int, IEnumerable<SortInfo>, IPagedList<Model.Wholesaler.Wholesaler>> getter = (pageNumber, pageSize, sortInfos) =>
+
+            if (!_customerWholesalers.TryGetValue(result.Id, out var customerWholesalers))
             {
-                var wholesalers = new List<Model.Wholesaler.Wholesaler>();
-                var allStores = _workContextAccessor.WorkContext.AllStores;
-                var organizations = _customerApi.ListOrganizations();
-                foreach (var store in allStores)
+                _customerWholesalers[result.Id] = customerWholesalers = new List<Model.Wholesaler.Wholesaler>();
+            }
+            var allStores = _workContextAccessor.WorkContext.AllStores;
+            var organizations = _customerApi.ListOrganizations();
+            foreach (var store in allStores)
+            {
+                var organization = organizations.FirstOrDefault(x => x.Name.EqualsInvariant(store.Id));
+                if (organization != null)
                 {
-                    var organization = organizations.FirstOrDefault(x => x.Name.EqualsInvariant(store.Id));
-                    var wholesaler = new Model.Wholesaler.Wholesaler
+                    var wholesaler = customerWholesalers.FirstOrDefault(x => x.Id == store.Id);
+                    if (wholesaler == null)
                     {
-                        Id = store.Id,
-                        Email = organization?.Emails?.FirstOrDefault() ?? store.Email,
-                        Phone = organization?.Phones?.FirstOrDefault(),
-                        Description = organization?.Description,
-                        Name = organization.Name,
-                        Address = store.PrimaryFullfilmentCenter?.Address,
-                    };
-                    if (!_agreementRequests.TryGetValue(workContext.CurrentUser.Contact.Value, out var aggrements))
-                    {
-                        _agreementRequests[workContext.CurrentUser.Contact.Value] = aggrements = new List<DeliveryAgreementRequest>();
-                    }
-                    var existAgreement = aggrements.FirstOrDefault(x => x.Wholesaler == wholesaler);
-                    if(existAgreement == null)
-                    {
-                        existAgreement = new DeliveryAgreementRequest
+                        wholesaler = new Model.Wholesaler.Wholesaler
                         {
+                            Id = store.Id,
+                            Email = organization?.Emails?.FirstOrDefault() ?? store.Email,
+                            Phone = organization?.Phones?.FirstOrDefault(),
+                            Description = organization?.Description,
+                            Name = organization.Name,
+                            Address = store.PrimaryFullfilmentCenter?.Address,
+                            Url = _urlBuilder.ToAppAbsolute("~/", store, store.DefaultLanguage)
+                        };
+                        var agreement = new DeliveryAgreementRequest
+                        {
+                            Id = $"{ wholesaler.Id }-{ contactId }-AGR",
                             Wholesaler = wholesaler,
                             Status = DeliveryAgreementStatus.NotSent
                         };
-                        aggrements.Add(existAgreement);
+                        wholesaler.AgreementRequest = agreement;
+                        customerWholesalers.Add(wholesaler);
                     }
-                    wholesaler.AgreementRequest = existAgreement;
-                    wholesalers.Add(wholesaler);
                 }
-                return new StaticPagedList<Model.Wholesaler.Wholesaler>(wholesalers, pageNumber, pageSize, wholesalers.Count());
-            };
-            result.Wholesalers = new MutablePagedList<Model.Wholesaler.Wholesaler>(getter, 1,  20);
+
+                result.Wholesalers = customerWholesalers;
+            }
             return result;
 
         }
 
+        public Task Handle(ConfirmDeliveryAgreementEvent message)
+        {
+            var agreement = _customerWholesalers.SelectMany(x => x.Value).Select(x => x.AgreementRequest).FirstOrDefault(x => x.Id == message.DeliveryAgreementId);
+            if (agreement != null)
+            {
+                agreement.ConfirmedDate = DateTime.UtcNow;
+                agreement.Status = DeliveryAgreementStatus.Confirmed;
+            }
+            return Task.CompletedTask;
+        }
+
+        public Task Handle(SendDeliveryAgreementEvent message)
+        {
+            var agreement = _customerWholesalers.SelectMany(x => x.Value).Select(x => x.AgreementRequest).FirstOrDefault(x => x == message.DeliveryAgreement);
+            if (agreement != null)
+            {
+                agreement.SentDate = DateTime.UtcNow;
+                agreement.Status = DeliveryAgreementStatus.Sent;
+            }
+            //TODO: Send email notification
+            return Task.CompletedTask;
+        }
     }
 }

@@ -14,9 +14,7 @@
         templateUrl: "account-wholesalers.tpl",
         bindings: { $router: '<' },
         controller: ['storefrontApp.mainContext', '$scope', 'storefront.wholesalersApi', 'storefront.corporateApiErrorHelper', 'loadingIndicatorService', 'confirmService', '$location', '$translate', function (mainContext, $scope, wholesalersApi, corporateApiErrorHelper, loader, confirmService, $location, $translate) {
-            var $ctrl = this;
-            $ctrl.currentMemberId = mainContext.customer.id;
-            $ctrl.newMemberComponent = null;
+            var $ctrl = this;        
             $ctrl.loader = loader;
             $ctrl.pageSettings = { currentPage: 1, itemsPerPageCount: 5, numPages: 10 };
             $ctrl.pageSettings.pageChanged = function () {
@@ -26,12 +24,6 @@
                         $ctrl.pageSettings.totalItems = data.length;                      
                     }).$promise;
                 });
-            };         
-
-            $scope.init = function (storeId, cultureName, registrationUrl) {
-                $ctrl.storeId = storeId;
-                $ctrl.cultureName = cultureName;
-                $ctrl.registrationUrl = registrationUrl;
             };
 
             this.$routerOnActivate = function (next) {
@@ -46,18 +38,35 @@
             );
                     
 
-            $ctrl.edit = function (memberId) {
-                this.$router.navigate(['MemberDetail', { member: memberId, pageNumber: $ctrl.pageSettings.currentPage }]);
-            }
+            $ctrl.sendAgreement = function (wholesaler) {
+                loader.wrapLoading(function () {
+                    return wholesalersApi.sentDeliveryAgreementRequest(wholesaler.agreementRequest, function (data) {
+                        $ctrl.pageSettings.pageChanged();
+                    }).$promise;
+                });
+            };
+
+            $ctrl.confirmAgreement = function (agreement) {
+                loader.wrapLoading(function () {
+                    return wholesalersApi.confirmDeliveryAgreementRequest({ id: agreement.id }, {}, function (data) {
+                        $ctrl.pageSettings.pageChanged();
+                    }).$promise;
+                });
+            };
+
+            $ctrl.selectWholesaler = function (wholesaler) {
+                loader.wrapLoading(function () {
+                    return wholesalersApi.selectWholesaler({ id: wholesaler.id }, {}, function (data) {
+                        $ctrl.pageSettings.pageChanged();
+                    }).$promise;
+                });
+            };
             
             $ctrl.validate = function () {
                 $ctrl.inviteForm.$setSubmitted();
                 return $ctrl.inviteForm.valid;
             };
 
-            $ctrl.showActions = function (member) {
-                return member.id != mainContext.customer.id;
-            }
         }]
     })
     .component('vcAccountWholesalerDetail', {
@@ -65,7 +74,7 @@
         require: {
             accountManager: '^vcAccountManager'
         },
-        controller: ['$q', '$rootScope', '$scope', '$window', 'roleService', 'storefront.corporateAccountApi', 'storefront.corporateApiErrorHelper', 'loadingIndicatorService', 'confirmService', function ($q, $rootScope, $scope, $window, roleService, corporateAccountApi, corporateApiErrorHelper, loader, confirmService) {
+        controller: ['$q', '$rootScope', '$scope', '$window', 'storefront.corporateAccountApi', 'storefront.corporateApiErrorHelper', 'loadingIndicatorService', 'confirmService', function ($q, $rootScope, $scope, $window,  corporateAccountApi, corporateApiErrorHelper, loader, confirmService) {
             var $ctrl = this;
             $ctrl.loader = loader;
             $ctrl.fieldsConfig = [

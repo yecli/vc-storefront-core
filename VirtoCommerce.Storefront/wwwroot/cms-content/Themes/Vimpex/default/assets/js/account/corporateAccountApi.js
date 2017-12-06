@@ -2,7 +2,9 @@
     .factory('storefront.wholesalersApi', ['$resource', 'apiBaseUrl', function ($resource, apiBaseUrl) {
         return $resource(apiBaseUrl + 'api/', {}, {
             getWholesalersList: { url: 'storefrontapi/wholesalers', isArray: true },
-            sentDeliveryAgreementRequest: { url: 'storefrontapi/deliveryagreement', method: 'POST' },
+            sentDeliveryAgreementRequest: { url: 'storefrontapi/wholesalers/agreement/send', method: 'POST' },
+            selectWholesaler: { url: 'storefrontapi/wholesalers/:id/select' },
+            confirmDeliveryAgreementRequest: { url: 'wholesalers/agreements/:id/confirm'}
         });
     }])
 .factory('storefront.corporateAccountApi', ['$resource', 'apiBaseUrl', function ($resource, apiBaseUrl) {

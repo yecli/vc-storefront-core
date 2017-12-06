@@ -4,7 +4,7 @@ using VirtoCommerce.Storefront.Model.Customer;
 
 namespace VirtoCommerce.Storefront.Model.Wholesaler
 {
-    public class DeliveryAgreementRequest : ValueObject
+    public class DeliveryAgreementRequest : Entity
     {
         public Wholesaler Wholesaler { get; set; }
         public DateTime SentDate { get; set; }

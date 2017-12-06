@@ -42,6 +42,7 @@ using VirtoCommerce.Storefront.Routing;
 using VirtoCommerce.Tools;
 using VirtoCommerce.Storefront.Model.Wholesaler;
 using VirtoCommerce.Storefront.Domain.Wholesaler;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace VirtoCommerce.Storefront
 {
@@ -195,10 +196,12 @@ namespace VirtoCommerce.Storefront
                 {
                     Duration = (int)TimeSpan.FromHours(1).TotalSeconds,
                     VaryByHeader = "host"
-                });
+                });              
+
             }).AddJsonOptions(options =>
             {
                 options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
+                options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
                 options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 options.SerializerSettings.Converters.Add(new CartTypesJsonConverter(snapshotProvider.GetService<IWorkContextAccessor>()));
@@ -217,7 +220,7 @@ namespace VirtoCommerce.Storefront
             //Register event handlers via reflection
             services.RegisterAssembliesEventHandlers(typeof(Startup));
 
-            services.AddApplicationInsightsTelemetry();
+            //services.AddApplicationInsightsTelemetry();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -240,6 +243,7 @@ namespace VirtoCommerce.Storefront
             app.UseAuthentication();
 
             app.UseMiddleware<WorkContextBuildMiddleware>();
+            app.UseMiddleware<ActiveWholesalerMiddleware>();
             app.UseMiddleware<StoreMaintenanceMiddleware>();
             app.UseMiddleware<NoLiquidThemeMiddleware>();
             app.UseMiddleware<ApiErrorHandlingMiddleware>();
@@ -257,6 +261,7 @@ namespace VirtoCommerce.Storefront
             app.UseMvc(routes =>
             {
                 routes.MapStorefrontRoutes();
+
             });
 
 

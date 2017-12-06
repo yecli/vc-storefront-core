@@ -9,6 +9,6 @@ namespace VirtoCommerce.Storefront.Model.Customer
     {
         [JsonIgnore]
         [IgnoreDataMember]
-        public IMutablePagedList<Wholesaler.Wholesaler> Wholesalers { get; set; }
+        public System.Collections.Generic.IList<Wholesaler.Wholesaler> Wholesalers { get; set; }
     }
 }

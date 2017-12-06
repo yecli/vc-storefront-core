@@ -47,7 +47,6 @@
     {{ 'app.js' | asset_url | script_tag }}
     {{ 'bundle/account-scripts.js' | static_asset_url | append_version | script_tag }}
     {{ 'shop.js' | asset_url | script_tag }}
-    {{ 'role.js' | asset_url | script_tag }}
 
     {{ content_for_header }}
 

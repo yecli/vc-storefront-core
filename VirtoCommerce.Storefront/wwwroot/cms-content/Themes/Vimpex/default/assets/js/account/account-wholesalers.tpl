@@ -1,8 +1,7 @@
 ﻿<ng-outlet ng-init=""></ng-outlet>
 <script id="account-wholesalers.tpl" type="text/ng-template">
-
-    <div ng-init="init('{{ shop.id }}', '{{ current_language.culture_name }}', '{{ "/account/register" | absolute_url }}')">
-        <h4>{{ 'customer.edit_company_members.title' | t }}</h4>
+    <div>
+        <h4>List of wholesalers</h4>
         <table class="full" ng-if="$ctrl.entries.length">
             <thead>
                 <tr>
@@ -20,14 +19,17 @@
                     <td ng-bind="wholesaler.phone"></td>
                     <td ng-bind="wholesaler.agreementRequest.status"></td>
                     <td>
-                        <span ng-show="$ctrl.showActions(wholesaler)">
-                            <a ng-if="wholesaler.agreementRequest.status == 'NotSent'" ng-click="$ctrl.sendAgreement(wholesaler.id)" href="">Send agreement</a>                    
-                            <a ng-if="!wholesaler.isActive" ng-click="$ctrl.setActive(wholesaler.id)" href=""> | Set current</a>
+                        <span>
+                            <a ng-if="wholesaler.agreementRequest.status == 'NotSent'" ng-click="$ctrl.sendAgreement(wholesaler)" href="">Send agreement</a>
+                            <a ng-if="!wholesaler.isActive && wholesaler.agreementRequest.status == 'Confirmed'" ng-click="$ctrl.selectWholesaler(wholesaler)" href="">Set current</a>
+                            <a ng-if="wholesaler.agreementRequest.status == 'Sent'" ng-click="$ctrl.confirmAgreement(wholesaler.agreementRequest)" href="">Confirm (only for test)</a>
+                            <a ng-if="wholesaler.isActive" ng-href="{{ wholesaler.url }}">Active (go to store)</a>
                         </span>
                     </td>
                 </tr>
             </tbody>
         </table>
         <div ng-if='$ctrl.pageSettings.totalItems > $ctrl.pageSettings.itemsPerPageCount' ng-include="'pagerTemplate.html'"></div>
-        <p ng-if="!$ctrl.entries.length && !$ctrl.loader.isLoading">No wholesalers available</p>       
+        <p ng-if="!$ctrl.entries.length && !$ctrl.loader.isLoading">No wholesalers available</p>
+    </div>
 </script>
