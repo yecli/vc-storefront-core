@@ -56,8 +56,9 @@ namespace VirtoCommerce.Storefront.Domain.Wholesaler
                         wholesaler = new Model.Wholesaler.Wholesaler
                         {
                             Id = store.Id,
-                            Email = organization?.Emails?.FirstOrDefault() ?? store.Email,
-                            Phone = organization?.Phones?.FirstOrDefault(),
+                            Logo = organization.DynamicProperties.Select(x => x.ToDynamicProperty()).GetDynamicPropertyValue("logo"),
+                            Email = organization.Emails?.FirstOrDefault() ?? store.Email,
+                            Phone = organization.Phones?.FirstOrDefault(),
                             Description = organization?.Description,
                             Name = organization.Name,
                             Address = store.PrimaryFullfilmentCenter?.Address,

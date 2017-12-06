@@ -32,6 +32,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         public Shop Shop { get; set; }
 
+        public Wholesaler Wholesaler { get; set; }
         /// <summary>
         /// The liquid object cart returns information about customer shopping cart
         /// </summary>

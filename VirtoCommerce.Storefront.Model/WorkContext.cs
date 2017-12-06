@@ -87,6 +87,11 @@ namespace VirtoCommerce.Storefront.Model
         public Store CurrentStore { get; set; }
 
         /// <summary>
+        /// Current Wholesaler
+        /// </summary>
+        public Wholesaler.Wholesaler CurrentWholesaler { get; set; }
+
+        /// <summary>
         /// Gets or sets the current shopping cart
         /// </summary>
         public Lazy<ShoppingCart> CurrentCart { get; set; }

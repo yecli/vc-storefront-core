@@ -209,6 +209,21 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 result.PageSize = workContext.PageSize ?? 0;
             }
 
+
+            if (workContext.CurrentWholesaler != null)
+            {
+                result.Wholesaler = new Wholesaler
+                {
+                    Description = workContext.CurrentWholesaler.Description,
+                    Email = workContext.CurrentWholesaler.Email,
+                    Logo = workContext.CurrentWholesaler.Logo,
+                    Name = workContext.CurrentWholesaler.Name,
+                    Phone = workContext.CurrentWholesaler.Phone,
+                    Url = workContext.CurrentWholesaler.Url,
+                    IsActive = workContext.CurrentWholesaler.IsActive
+                };
+
+            }
             return result;
         }
     }

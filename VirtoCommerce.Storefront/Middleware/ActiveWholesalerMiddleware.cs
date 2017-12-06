@@ -22,11 +22,7 @@ namespace VirtoCommerce.Storefront.Middleware
             var workContext = _workContextAccessor.WorkContext;
             if (workContext != null && workContext.CurrentUser != null && workContext.CurrentUser.IsRegisteredUser && workContext.CurrentUser.Contact.Value != null)
             {
-                var activeWholesaler =  workContext.CurrentUser.Contact.Value.Wholesalers.FirstOrDefault(x => x.IsActive);
-                if(activeWholesaler != null)
-                {
-                    //workContext.CurrentStore = workContext.AllStores.FirstOrDefault(x => x.Id.EqualsInvariant(activeWholesaler.Id));
-                }
+                workContext.CurrentWholesaler =  workContext.CurrentUser.Contact.Value.Wholesalers.FirstOrDefault(x => x.IsActive);         
             }
 
             await _next(context);
