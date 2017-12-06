@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html class="no-touch no-js" ng-app="storefrontApp">
 <head>
     <meta charset="utf-8" />
@@ -45,7 +45,6 @@
     {{ '//cdnjs.cloudflare.com/ajax/libs/angular-translate/2.12.1/angular-translate-loader-url/angular-translate-loader-url.min.js' | script_tag }}
     {{ 'app.js' | asset_url | script_tag }}
     {{ 'bundle/scripts.js' | static_asset_url | append_version | script_tag }}
-    
     <script>
         var BASE_URL = '{{ "/" | full_url }}';
     </script>
@@ -68,7 +67,7 @@
     {% include 'recently-added-list-item-dialog' %}
     {% include 'recently-added-actual-quote-request-item-dialog' %}
         {% if settings.store_selector_enable %}
-        {% include 'top-header-selector' %}
+        {% include 'top-header' %}
         {% endif %}
         <header class="site-header" role="banner">
             <div class="wrapper">
@@ -81,7 +80,7 @@
                                 {% endif %}
                                 {% if settings.logo_use_image %}
                                 <a href="{{ '/' | absolute_url }}" itemprop="url">
-                                    <img alt="{{ shop.name }}" src="{{ 'logo.png' | asset_url }}" itemprop="logo" />
+                                    <img alt="{{ shop.name }}" src="{{ 'logo.svg' | asset_url }}" itemprop="logo" />
                                 </a>
                                 {% else %}
                                 <a href="{{ '/' | absolute_url }}" itemprop="url">{{ shop.name }}</a>

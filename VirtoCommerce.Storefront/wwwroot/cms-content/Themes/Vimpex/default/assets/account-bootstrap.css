@@ -1,4 +1,4 @@
-﻿.one-whole {
+.one-whole {
     margin-bottom: 30px;
 }
 
@@ -494,6 +494,7 @@ input[type="radio"].input-radio {
     float: left;
 }
 .nav-pills > li > a {
+    color: #3e3b38;
     border-radius: 4px;
     padding: 5px 15px;
 }
