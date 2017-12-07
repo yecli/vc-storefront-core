@@ -70,7 +70,7 @@
                     {% endif %}
                 {% endif %}
             </span>
-            {% if on_sale %}
+            {% if on_sale and customer %}
                 <span class="sale-tag medium--right{% if settings.product_reviews_enable %} has-reviews{% endif %}">
                     {% if settings.show_prices_with_taxes %}
                         {% assign compare_price = product.compare_at_price_with_tax %}
