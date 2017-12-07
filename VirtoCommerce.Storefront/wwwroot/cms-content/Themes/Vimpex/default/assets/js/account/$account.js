@@ -1,5 +1,6 @@
-﻿//Call this to register our module to main application
+//Call this to register our module to main application
 var moduleName = "storefront.account";
+
 if (storefrontAppDependencies !== undefined) {
     storefrontAppDependencies.push(moduleName);
 }
@@ -35,7 +36,7 @@ angular.module(moduleName, ['ngResource', 'ngComponentRouter', 'credit-cards', '
          { path: '/wholesalers/...', name: 'Wholesalers', component: 'vcAccountWholesalers' },
          { path: '/wishlist', name: 'WishList', component: 'vcAccountLists' }
     ],
-    controller: ['$scope', '$timeout', 'storefront.accountApi', 'storefrontApp.mainContext', 'storefront.corporateAccountApi', 'loadingIndicatorService', function ($scope, $timeout, accountApi, mainContext, authService, corporateAccountApi, loader) {
+    controller: ['storefront.accountApi', 'storefrontApp.mainContext', 'loadingIndicatorService', function (accountApi, mainContext, loader) {
         var $ctrl = this;
         $ctrl.loader = loader;
 
@@ -68,7 +69,6 @@ angular.module(moduleName, ['ngResource', 'ngComponentRouter', 'credit-cards', '
                 return accountApi.changePassword(changePasswordData).$promise;
             });
         };
-
     }]
 })
 

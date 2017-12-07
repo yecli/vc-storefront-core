@@ -1,6 +1,7 @@
 ﻿angular.module('storefront.account')
     .factory('storefront.accountApi', ['$resource', function ($resource) {
         return $resource('storefrontapi/account', null, {
+            register: { url: 'storefrontapi/account/register', method: 'POST' },
             updateAccount: { url: 'storefrontapi/account', method: 'POST' },
             changePassword: { url: 'storefrontapi/account/password', method: 'POST' },
             getQuotes: { url: 'storefrontapi/account/quotes' },

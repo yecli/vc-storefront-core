@@ -80,16 +80,16 @@
                     {% if template == 'index' %}
                     <h1 class="header-logo" itemscope itemtype="http://schema.org/Organization">
                         {% else %}
-                        <div class="h1 header-logo" itemscope itemtype="http://schema.org/Organization" />
-                        {% endif %}
-                        {% if settings.logo_use_image %}
-                        <a href="{{ '/' | absolute_url }}" itemprop="url">
-                            <img alt="{{ shop.name }}" src="{{ 'logo.png' | asset_url }}" itemprop="logo" />
-                        </a>
-                        {% else %}
-                        <a href="{{ '/' | absolute_url }}" itemprop="url">{{ shop.name }}</a>
-                        {% endif %}
-                        {% if template == 'index' %}
+                        <div class="h1 header-logo" itemscope itemtype="http://schema.org/Organization">
+                            {% endif %}
+                            {% if settings.logo_use_image %}
+                            <a href="{{ '/' | absolute_url }}" itemprop="url">
+                                <img alt="{{ shop.name }}" src="{{ 'logo.svg' | asset_url }}" itemprop="logo" />
+                            </a>
+                            {% else %}
+                            <a href="{{ '/' | absolute_url }}" itemprop="url">{{ shop.name }}</a>
+                            {% endif %}
+                            {% if template == 'index' %}
                     </h1>
                     {% else %}
                 </div>
