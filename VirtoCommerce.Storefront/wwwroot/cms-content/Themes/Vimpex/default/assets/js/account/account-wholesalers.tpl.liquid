@@ -1,0 +1,47 @@
+﻿<ng-outlet ng-init=""></ng-outlet>
+<script id="account-wholesalers.tpl" type="text/ng-template">
+    <div>
+        <div class="section-header">
+            <h4>List of wholesalers</h4>
+        </div>
+        <div class="grid-uniform">
+            <div class="grid-item one-third" ng-repeat="wholesaler in $ctrl.entries">
+                <div class="grid">
+                    <div class="grid-item one-third">
+                        <p ng-hide="wholesaler.logo" class="no-whosaler-image">
+                            <img src="{{ 'no-image.svg' | asset_url }}">
+                        </p>
+                        <p ng-show="wholesaler.logo">
+                            <img ng-src="{% raw %}{{ wholesaler.logo }}{% endraw %}">
+                        </p>
+                    </div>
+                    <div class="grid-item two-thirds">
+                        <ul class="inline-list">
+                            <li class="vertical-center">
+                                <h5 ng-bind="wholesaler.name"></h5>
+                            </li>
+                            <li>
+                                <span class="wholesaler-tag small" ng-if="wholesaler.agreementRequest.status == 'NotSent'" ng-class="{'danger': ($ctrl.entries | every: '!isActive')}">Not sent</span>
+                                <span class="wholesaler-tag small warning" ng-if="wholesaler.agreementRequest.status == 'Sent'">Sent</span>
+                                <span class="wholesaler-tag small info" ng-if="!wholesaler.isActive && wholesaler.agreementRequest.status == 'Confirmed'">Confirmed</span>
+                                <span class="wholesaler-tag small success" ng-if="wholesaler.isActive">Active</span>
+                            </li>
+                        </ul>
+                        <p>
+                            <strong>Email:</strong> <a ng-href="'mailto:' + wholesaler.email" ng-bind="wholesaler.email"></a><br>
+                            <strong>Phone:</strong> <span ng-bind="wholesaler.phone"></span>
+                        </p>
+                    </div>
+                    <div class="grid-item">
+                        <a class="vc-btn secondary" ng-if="wholesaler.agreementRequest.status == 'NotSent'" ng-click="$ctrl.sendAgreement(wholesaler)" href="">Send agreement</a>
+                        <a class="vc-btn secondary" ng-if="!wholesaler.isActive && wholesaler.agreementRequest.status == 'Confirmed'" ng-click="$ctrl.selectWholesaler(wholesaler)" href="">Set current</a>
+                        <a class="vc-btn secondary" ng-if="wholesaler.agreementRequest.status == 'Sent'" ng-click="$ctrl.confirmAgreement(wholesaler.agreementRequest)" href="">Confirm (only for test)</a>
+                        <a class="vc-btn" ng-if="wholesaler.isActive" ng-href="{% raw %}{{ wholesaler.url }}{% endraw %}">Go to store</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-if='$ctrl.pageSettings.totalItems > $ctrl.pageSettings.itemsPerPageCount' ng-include="'pagerTemplate.html'"></div>
+        <p ng-if="!$ctrl.entries.length && !$ctrl.loader.isLoading">No wholesalers available</p>
+    </div>
+</script>

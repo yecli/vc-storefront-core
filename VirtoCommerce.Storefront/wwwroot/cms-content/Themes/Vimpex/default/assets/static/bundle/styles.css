@@ -284,11 +284,11 @@ select {
 }
 
 .vc-btn {
-    background: #cccccc;
+    background: #017b3c;
     border: none;
     border-radius: 4px;
     box-sizing: border-box;
-    color: #474747;
+    color: #fff;
     cursor: pointer;
     display: inline-block;
     font-size: 14px;
@@ -300,8 +300,9 @@ select {
 }
 
     .vc-btn.secondary {
-        background: #dcdcdc;
-        color: #585858;
+        background: #fff;
+        border: 2px solid #e0e0e0;
+        color: #3e3b38;
     }
 
     .vc-btn.loading {
@@ -339,15 +340,18 @@ select {
     }
 }
 
-.vc-btn:hover {
-    background: #c4c4c4;
-    color: #0c0c0c;
+.vc-btn.secondary:hover,
+.vc-btn.secondary:focus,
+.vc-btn.secondary:active {
+    background-color: #f2f2f2;
+    color: #3e3b38;
 }
 
+.vc-btn:hover,
 .vc-btn:focus,
 .vc-btn:active {
-    color: #0f0f0f;
-    box-shadow: 0 0 0 2px #017b3c inset;
+    background: #016230;
+    color: #fff;
 }
 
 .vc-form .form-input::-webkit-input-placeholder {

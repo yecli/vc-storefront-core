@@ -1,4 +1,4 @@
-/*============================================================================
+﻿/*============================================================================
   Virto Commerce Default Theme based on Timber v1.4.0
   Built with Sass - http://sass-lang.com/
 
@@ -116,8 +116,9 @@ $colorFooterBg: {{ settings.color_footer_bg }};
 $colorFooterText: {{ settings.color_footer_text }};
 
 // Helper colors
-$disabledGrey: #f6f6f6;
-$disabledBorder: darken($disabledGrey, 25%);
+$disabledBackground: #f6f6f6;
+$disabledColor: darken(#f6f6f6, 20%);
+$disabledBorder: darken($disabledBackground, 30%);
 $errorRed: #dc0000;
 $errorRedBg: lighten($errorRed, 55%);
 $successGreen: #0a942a;
@@ -1064,6 +1065,8 @@ sub {
   color: rgba($colorTextBody,0.5);
 }
 
+.vertical-center { vertical-align: middle; }
+
 /*================ Blockquotes ================*/
 blockquote, q { quotes: none; }
 
@@ -1352,8 +1355,8 @@ html input[disabled] {
   &[disabled],
   &.disabled {
     cursor: default;
-    color: $disabledBorder;
-    background-color: $disabledGrey;
+    color: $disabledColor;
+    background-color: $disabledBackground;
   }
 }
 
@@ -1577,7 +1580,7 @@ select {
   &[disabled],
   &.disabled {
     cursor: default;
-    background-color: $disabledGrey;
+    background-color: $disabledBackground;
     border-color: $disabledBorder;
   }
 }
@@ -2900,6 +2903,7 @@ a.product-grid-item,
     width: 100%;
 }
 
+.wholesaler-tag,
 .sale-tag {
   display: inline-block;
   text-transform: uppercase;
@@ -2915,6 +2919,10 @@ a.product-grid-item,
     display: none;
   }
 
+  &.small {
+    font-size: 11px;
+  }
+
   &.large {
     font-size: 16px;
     padding: 0 12px;
@@ -2927,6 +2935,31 @@ a.product-grid-item,
 
   &.has-reviews {
     margin-bottom: $gutter/3;
+  }
+}
+
+.wholesaler-tag {
+  border-color: $disabledBorder;
+  color: $disabledColor;
+
+  &.danger {
+    border-color: #d43f3a;
+    color: #d9534f;
+  }
+
+  &.warning {
+    border-color: #f0ad4e;
+    color: #eea236;
+  }
+
+  &.info {
+    border-color: #269abc;
+    color: #269abc;
+  }
+
+  &.success {
+    border-color: #5cb85c;
+    color: #4cae4c;
   }
 }
 
@@ -4687,8 +4720,12 @@ dd {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+.no-whosaler-image,
 .no-product-image {
     opacity: .35;
+}
+.no-whosaler-image img {
+    width: 100%;
 }
 .no-product-image img {
     height: 100%;
