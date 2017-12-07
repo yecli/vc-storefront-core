@@ -73,7 +73,7 @@
 
     <p></p>
     <h4>Billing address</h4>
-    <vc-address address="$ctrl.member.billingAddress" validation-container="$ctrl" countries="$ctrl.availCountries" get-country-regions="$ctrl.getCountryRegions(country)" edit-mode="true"></vc-address>
+    <vc-address address="$ctrl.member.defaultBillingAddress" validation-container="$ctrl" countries="$ctrl.availCountries" get-country-regions="$ctrl.getCountryRegions(country)" edit-mode="true"></vc-address>
 
     <h4>
         <label>
@@ -81,6 +81,6 @@
         </label>
     </h4>
     <div ng-if="$ctrl.shipToAnotherAddress">
-        <vc-address address="$ctrl.member.deliveryAddress" validation-container="$ctrl" countries="$ctrl.availCountries" get-country-regions="$ctrl.getCountryRegions(country)" edit-mode="true"></vc-address>
+        <vc-address address="$ctrl.member.defaultShippingAddress" validation-container="$ctrl" countries="$ctrl.availCountries" get-country-regions="$ctrl.getCountryRegions(country)" edit-mode="true"></vc-address>
     </div>
 </form>

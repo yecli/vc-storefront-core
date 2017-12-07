@@ -194,7 +194,11 @@ namespace VirtoCommerce.Storefront.Domain
             {
                 retVal.Emails = customer.Emails;
             }
-           
+            if (!customer.DynamicProperties.IsNullOrEmpty())
+            {
+                retVal.DynamicProperties = customer.DynamicProperties.Select(ToDynamicPropertyDto).ToList();
+            }
+
             return retVal;
         }
 

@@ -15,6 +15,7 @@ namespace VirtoCommerce.Storefront.Routing
             #region Storefront API routes
 
             // API wholesalers
+            routes.MapStorefrontRoute("API.AccountRegister", "storefrontapi/account/register", defaults: new { controller = "ApiAccount", action = "Register" }, constraints: new RouteValueDictionary(new { httpMethod = new HttpMethodRouteConstraint("POST") }));
             routes.MapStorefrontRoute("Wholesaler.Landing", "wholesalers/landing", defaults: new { controller = "Wholesaler", action = "Landing" });
             routes.MapStorefrontRoute("Wholesaler.ConfirmDelivery", "wholesalers/agreements/{agreementId}/confirm", defaults: new { controller = "Wholesaler", action = "ConfirmDeliveryAggrement" });
 

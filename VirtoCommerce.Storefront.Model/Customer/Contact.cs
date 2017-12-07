@@ -1,11 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Order;
 using VirtoCommerce.Storefront.Model.Quote;
 using VirtoCommerce.Storefront.Model.Subscriptions;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace VirtoCommerce.Storefront.Model.Customer
 {
@@ -26,6 +25,41 @@ namespace VirtoCommerce.Storefront.Model.Customer
 
         public string MiddleName { get; set; }
 
+        public string License
+        {
+            get
+            {
+                return DynamicProperties.GetDynamicPropertyValue("License", null);
+            }
+            set
+            {
+                DynamicProperties.SetDynamicPropertySingleValue("License", "ShortText", Language.InvariantLanguage, value);
+            }
+        }
+
+        public string TaxId
+        {
+            get
+            {
+                return DynamicProperties.GetDynamicPropertyValue("TaxId", null);
+            }
+            set
+            {
+                DynamicProperties.SetDynamicPropertySingleValue("TaxId", "ShortText", Language.InvariantLanguage, value);
+            }
+        }
+        public string Phone { get; set; }
+        public string Outlet
+        {
+            get
+            {
+                return DynamicProperties.GetDynamicPropertyValue("Outlet", null);
+            }
+            set
+            {
+                DynamicProperties.SetDynamicPropertySingleValue("Outlet", "ShortText", Language.InvariantLanguage, value);
+            }
+        }
 
         public string TimeZone { get; set; }
         public string DefaultLanguage { get; set; }
@@ -57,6 +91,10 @@ namespace VirtoCommerce.Storefront.Model.Customer
         [JsonIgnore]
         [IgnoreDataMember]
         public IMutablePagedList<Subscription> Subscriptions { get; set; }
+
+        [JsonIgnore]
+        [IgnoreDataMember]
+        public System.Collections.Generic.IList<Wholesaler.Wholesaler> Wholesalers { get; set; }
 
     }
 }

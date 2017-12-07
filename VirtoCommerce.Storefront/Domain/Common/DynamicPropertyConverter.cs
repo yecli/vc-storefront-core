@@ -63,7 +63,7 @@ namespace VirtoCommerce.Storefront.Domain
 
             if (dynamicProperty.Values != null)
             {
-                result.Values = dynamicProperty.Values.Select(v => v.ToPropertyValueDto()).ToList();
+                result.Values = dynamicProperty.Values.Select(v => v.ToPropertyValueDto()).ToList();            
             }
             else if (dynamicProperty.DictionaryValues != null)
             {

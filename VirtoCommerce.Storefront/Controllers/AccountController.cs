@@ -63,8 +63,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register([FromForm] Register formModel)
+        public async Task<ActionResult> Register([FromBody] Register formModel)
         {
             var user = formModel.ToUser();
             user.StoreId = WorkContext.CurrentStore.Id;
@@ -73,7 +72,7 @@ namespace VirtoCommerce.Storefront.Controllers
             if (result.Succeeded == true)
             {
                 user = await _signInManager.UserManager.FindByNameAsync(user.UserName);
-                await _publisher.Publish(new UserRegisteredEvent(WorkContext, user, formModel.ToUserRegistrationInfo()));
+                await _publisher.Publish(new UserRegisteredEvent(WorkContext, user, formModel));
                 await _signInManager.SignInAsync(user, isPersistent: true);
                 await _publisher.Publish(new UserLoginEvent(WorkContext, user));
                 return StoreFrontRedirect("~/account");
@@ -230,14 +229,14 @@ namespace VirtoCommerce.Storefront.Controllers
             if (!externalLoginResult.Succeeded)
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                var registrationInfo = new UserRegistrationInfo
+                var register = new Register
                 {
                     FirstName = loginInfo.Principal.FindFirstValue(ClaimTypes.GivenName),
                     LastName = loginInfo.Principal.FindFirstValue(ClaimTypes.Surname),
                     UserName = user.UserName,
                     Email = user.Email
                 };
-                await _publisher.Publish(new UserRegisteredEvent(WorkContext, user, registrationInfo));
+                await _publisher.Publish(new UserRegisteredEvent(WorkContext, user, register));
             }
             await _publisher.Publish(new UserLoginEvent(WorkContext, user));
 

@@ -15,19 +15,46 @@ using VirtoCommerce.Storefront.Model.Customer.Services;
 using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Quote;
 using VirtoCommerce.Storefront.Model.Security;
+using VirtoCommerce.Storefront.Domain.Security;
+using VirtoCommerce.Storefront.Model.Common.Events;
+using VirtoCommerce.Storefront.Model.Security.Events;
 
 namespace VirtoCommerce.Storefront.Controllers.Api
 {
     public class ApiAccountController : StorefrontControllerBase
     {
         private readonly SignInManager<User> _signInManager;
+        private readonly IEventPublisher _publisher;
         private readonly IMemberService _memberService;
-        public ApiAccountController(IWorkContextAccessor workContextAccessor, IStorefrontUrlBuilder urlBuilder, SignInManager<User> signInManager, IMemberService memberService)
+        public ApiAccountController(IWorkContextAccessor workContextAccessor, IStorefrontUrlBuilder urlBuilder, SignInManager<User> signInManager, IMemberService memberService, IEventPublisher publisher)
             : base(workContextAccessor, urlBuilder)
         {
             _signInManager = signInManager;
             _memberService = memberService;
+            _publisher = publisher;
         }
+
+        // POST: storefrontapi/account/register
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult> Register([FromBody] Register formModel)
+        {
+            var user = formModel.ToUser();
+            user.StoreId = WorkContext.CurrentStore.Id;
+
+            var result = await _signInManager.UserManager.CreateAsync(user, formModel.Password);
+            if (result.Succeeded == true)
+            {
+                user = await _signInManager.UserManager.FindByNameAsync(user.UserName);
+                await _publisher.Publish(new UserRegisteredEvent(WorkContext, user, formModel));
+                await _signInManager.SignInAsync(user, isPersistent: true);
+                await _publisher.Publish(new UserLoginEvent(WorkContext, user));
+                return Json(new { RedirectUrl = UrlBuilder.ToAppAbsolute("~/account") });
+            }
+
+            return Json(new { Errors = result.Errors });
+        }
+
 
         // GET: storefrontapi/account
         [HttpGet]
