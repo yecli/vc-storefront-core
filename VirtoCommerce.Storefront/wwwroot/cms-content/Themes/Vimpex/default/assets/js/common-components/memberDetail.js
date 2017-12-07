@@ -6,9 +6,9 @@ storefrontApp.component('vcMemberDetail', {
         memberComponent: '=',
         fieldsConfig: '<'
     },
-    controller: ['$scope', function ($scope) {
+    controller: ['$scope', 'storefront.accountApi', function ($scope, accountApi) {
         var $ctrl = this;
-        
+
         $ctrl.config = [
             {
                 field: 'CompanyName',
@@ -35,7 +35,7 @@ storefrontApp.component('vcMemberDetail', {
             {
                 field: 'Roles',
                 disabled: false,
-                visible:  false
+                visible: false
             }
         ];
 
@@ -59,9 +59,19 @@ storefrontApp.component('vcMemberDetail', {
         $ctrl.validate = function () {
             if ($ctrl.form) {
                 $ctrl.form.$setSubmitted();
-                return $ctrl.form.$valid;
+                _.each(components, function (c) { return c.validate() }); // validate all
+                return _.all(components, function (c) { return c.validate() }) && $ctrl.form.$valid;
             }
+
             return true;
+        };
+
+        var components = [];
+        $ctrl.addComponent = function (component) {
+            components.push(component);
+        };
+        $ctrl.removeComponent = function (component) {
+            components = _.without(components, component);
         };
 
         $ctrl.showField = function (field) {
@@ -80,6 +90,12 @@ storefrontApp.component('vcMemberDetail', {
             var configItem = _.first(_.filter($ctrl.config, function (configItem) { return configItem.field === field; }));
             return configItem;
         }
+
+        $ctrl.availCountries = accountApi.getCountries();
+
+        $ctrl.getCountryRegions = function (country) {
+            return accountApi.getCountryRegions(country).$promise;
+        };
     }]
 });
 

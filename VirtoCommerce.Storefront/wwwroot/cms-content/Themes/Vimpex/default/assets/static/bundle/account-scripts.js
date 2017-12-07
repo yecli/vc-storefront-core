@@ -1184,9 +1184,9 @@ storefrontApp.component('vcMemberDetail', {
         memberComponent: '=',
         fieldsConfig: '<'
     },
-    controller: ['$scope', function ($scope) {
+    controller: ['$scope', 'storefront.accountApi', function ($scope, accountApi) {
         var $ctrl = this;
-        
+
         $ctrl.config = [
             {
                 field: 'CompanyName',
@@ -1213,7 +1213,7 @@ storefrontApp.component('vcMemberDetail', {
             {
                 field: 'Roles',
                 disabled: false,
-                visible:  false
+                visible: false
             }
         ];
 
@@ -1237,9 +1237,19 @@ storefrontApp.component('vcMemberDetail', {
         $ctrl.validate = function () {
             if ($ctrl.form) {
                 $ctrl.form.$setSubmitted();
-                return $ctrl.form.$valid;
+                _.each(components, function (c) { return c.validate() }); // validate all
+                return _.all(components, function (c) { return c.validate() }) && $ctrl.form.$valid;
             }
+
             return true;
+        };
+
+        var components = [];
+        $ctrl.addComponent = function (component) {
+            components.push(component);
+        };
+        $ctrl.removeComponent = function (component) {
+            components = _.without(components, component);
         };
 
         $ctrl.showField = function (field) {
@@ -1258,6 +1268,12 @@ storefrontApp.component('vcMemberDetail', {
             var configItem = _.first(_.filter($ctrl.config, function (configItem) { return configItem.field === field; }));
             return configItem;
         }
+
+        $ctrl.availCountries = accountApi.getCountries();
+
+        $ctrl.getCountryRegions = function (country) {
+            return accountApi.getCountryRegions(country).$promise;
+        };
     }]
 });
 
@@ -2340,7 +2356,7 @@ angular.module('storefront.account')
 }])
 .factory('storefront.corporateRegisterApi', ['$resource', 'apiBaseUrl', function ($resource, apiBaseUrl) {
     return $resource(apiBaseUrl + 'api/b2b/register', {}, {
-        register: { url: apiBaseUrl + 'api/b2b/register', method: 'POST' },
+        register: { url: 'account/register', method: 'POST' },
         registerMember: { url: apiBaseUrl + 'api/b2b/registerMember', method: 'POST' },
         getRegisterInfoByInvite: { url: apiBaseUrl + 'api/b2b/registerMember/:invite' },
         registerByInvite: { url: apiBaseUrl + 'api/b2b/registerMember/:invite', method: 'POST' }
@@ -2361,3 +2377,5 @@ angular.module('storefront.account')
         }
     };
 }]);
+
+//# sourceMappingURL=account-scripts.js.map

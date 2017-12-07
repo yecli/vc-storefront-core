@@ -1,35 +1,86 @@
 <form accept-charset="UTF8" name="memberDetailForm" novalidate="novalidate">
+    <p></p>
+    <h4>Login information</h4>
     <div class="form-fieldset" ng-init="$ctrl.setForm(memberDetailForm)">
-
-        <vc-labeled-input value="$ctrl.member.companyName" name="CompanyName" type="text" placeholder="{{ 'customer.register.company_name' | t }}" form="$ctrl.form" required="$ctrl.requiredField('CompanyName')" ng-show="$ctrl.showField('CompanyName')" disabled="$ctrl.disableField('CompanyName')"></vc-labeled-input>
-
-        <vc-labeled-input value="$ctrl.member.email" name="Email" type="email" placeholder="{{ 'customer.register.email' | t }}" form="$ctrl.form" required="$ctrl.requiredField('Email')" ng-show="$ctrl.showField('Email')" disabled="$ctrl.disableField('Email')"></vc-labeled-input>
-
-        <vc-labeled-input value="$ctrl.member.firstName" name="FirstName" type="text" placeholder="{{ 'customer.register.first_name' | t }}" form="$ctrl.form" required="true"></vc-labeled-input>
-
-        <vc-labeled-input value="$ctrl.member.lastName" name="LastName" type="text" placeholder="{{ 'customer.register.last_name' | t }}" form="$ctrl.form"></vc-labeled-input>
-
-        <vc-labeled-input value="$ctrl.member.title" name="Title" type="text" placeholder="{{ 'customer.register.job_title' | t }}" form="$ctrl.form"></vc-labeled-input>
-
-        <vc-labeled-input value="$ctrl.member.userName" name="UserName" type="text" placeholder="{{ 'customer.register.user_name' | t }}" form="$ctrl.form" required="$ctrl.requiredField('UserName')" ng-show="$ctrl.showField('UserName')" disabled="$ctrl.disableField('UserName')"></vc-labeled-input>
-
-        <vc-labeled-input value="$ctrl.member.password" name="Password" type="password" placeholder="{{ 'customer.register.password' | t }}" form="$ctrl.form" required="$ctrl.requiredField('Password')" ng-show="$ctrl.showField('Password')" disabled="$ctrl.disableField('Password')"></vc-labeled-input>
-
-        <div class="form-group" ng-show="$ctrl.showField('Password')" ng-class="{'keyuped': $ctrl.form.ConfirmPassword.$viewValue.length, 'error': ($ctrl.form.ConfirmPassword.$dirty || $ctrl.form.$submitted) && $ctrl.form.ConfirmPassword.$invalid }">
-          <label for="ConfirmPassword" class="form-label">{{ 'customer.register.confirm_password' | t }}</label>
-          <input ng-model="$ctrl.member.confirmPassword"
-                 name="ConfirmPassword"
-                 id="ConfirmPassword"
-                 placeholder="{{ 'customer.register.confirm_password' | t }}"
-                 type="password"
-                 ng-required="$ctrl.requiredField('Password')" class="form-input"
-                 ng-disabled="$ctrl.disableField('Password')"
-                 confirm-password-validation
-             />
-          <span class="form-error" ng-if="($ctrl.form.ConfirmPassword.$dirty || $ctrl.form.$submitted) && $ctrl.form.ConfirmPassword.$error.required" ng-bind="$ctrl.requiredError || '{{ 'common.required' | t }}'"></span>
-          <span class="form-error" ng-if="($ctrl.form.ConfirmPassword.$dirty || $ctrl.form.$submitted) && !$ctrl.form.ConfirmPassword.$error.required && $ctrl.form.ConfirmPassword.$invalid && $ctrl.form.ConfirmPassword.$error.confirmPasswordValidation">{{ 'common.not_match' | t }}</span>
+        <div class="form-group">
+            <div class="cols">
+                <div class="col col-50">
+                    <vc-labeled-input value="$ctrl.member.email" name="Email" type="email" placeholder="{{ 'customer.register.email' | t }}" form="$ctrl.form" required="$ctrl.requiredField('Email')" ng-show="$ctrl.showField('Email')" disabled="$ctrl.disableField('Email')"></vc-labeled-input>
+                </div>
+            </div>
         </div>
+        <div class="form-group">
+            <div class="cols">
+                <div class="col col-50">
+                    <vc-labeled-input value="$ctrl.member.password" name="Password" type="password" placeholder="{{ 'customer.register.password' | t }}" form="$ctrl.form" required="$ctrl.requiredField('Password')" ng-show="$ctrl.showField('Password')" disabled="$ctrl.disableField('Password')"></vc-labeled-input>
+                </div>
+                <div class="col col-50">
+                    <div class="form-group" ng-show="$ctrl.showField('Password')" ng-class="{'keyuped': $ctrl.form.ConfirmPassword.$viewValue.length, 'error': ($ctrl.form.ConfirmPassword.$dirty || $ctrl.form.$submitted) && $ctrl.form.ConfirmPassword.$invalid }">
+                        <label for="ConfirmPassword" class="form-label">{{ 'customer.register.confirm_password' | t }}</label>
+                        <input ng-model="$ctrl.member.confirmPassword"
+                               name="ConfirmPassword"
+                               id="ConfirmPassword"
+                               placeholder="{{ 'customer.register.confirm_password' | t }}"
+                               type="password"
+                               ng-required="$ctrl.requiredField('Password')" class="form-input"
+                               ng-disabled="$ctrl.disableField('Password')"
+                               confirm-password-validation="" />
+                        <span class="form-error" ng-if="($ctrl.form.ConfirmPassword.$dirty || $ctrl.form.$submitted) && $ctrl.form.ConfirmPassword.$error.required" ng-bind="$ctrl.requiredError || '{{ 'common.required' | t }}'"></span>
+                        <span class="form-error" ng-if="($ctrl.form.ConfirmPassword.$dirty || $ctrl.form.$submitted) && !$ctrl.form.ConfirmPassword.$error.required && $ctrl.form.ConfirmPassword.$invalid && $ctrl.form.ConfirmPassword.$error.confirmPasswordValidation">{{ 'common.not_match' | t }}</span>
+                    </div>
+                </div>
+            </div>
+            <span>
+                <i>At least 1 digit and 1 special character (#, &amp;, etc.)</i>
+            </span>
+        </div>
+    </div>
 
-        <vc-roles accounts="$ctrl.member.securityAccounts" value="$ctrl.member.role" form="$ctrl.form" name="Roles" required="$ctrl.requiredField('Roles')" ng-if="$ctrl.showField('Roles')" disabled="$ctrl.disableField('Roles')"></vc-roles>
+    <p></p>
+    <h4>Account information</h4>
+    <div class="form-fieldset">
+        <div class="form-group">
+            <div class="cols">
+                <div class="col col-50">
+                    <vc-labeled-input value="$ctrl.member.firstName" name="FirstName" type="text" placeholder="{{ 'customer.register.first_name' | t }}" form="$ctrl.form" required="true"></vc-labeled-input>
+                </div>
+                <div class="col col-50">
+                    <vc-labeled-input value="$ctrl.member.lastName" name="LastName" type="text" placeholder="{{ 'customer.register.last_name' | t }}" form="$ctrl.form" required="true"></vc-labeled-input>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="cols">
+                <div class="col col-50">
+                    <vc-labeled-input value="$ctrl.member.phone" name="Phone" placeholder="Phone" form="$ctrl.form"></vc-labeled-input>
+                </div>
+                <div class="col col-50">
+                    <vc-labeled-input value="$ctrl.member.outlet" name="Outlet" placeholder="Outlet name" form="$ctrl.form"></vc-labeled-input>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="cols">
+                <div class="col col-50">
+                    <vc-labeled-input value="$ctrl.member.license" name="License" placeholder="Business license" form="$ctrl.form"></vc-labeled-input>
+                </div>
+                <div class="col col-50">
+                    <vc-labeled-input value="$ctrl.member.taxId" name="TaxID" placeholder="Tax ID" form="$ctrl.form"></vc-labeled-input>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p></p>
+    <h4>Billing address</h4>
+    <vc-address address="$ctrl.member.billingAddress" validation-container="$ctrl" countries="$ctrl.availCountries" get-country-regions="$ctrl.getCountryRegions(country)" edit-mode="true"></vc-address>
+
+    <h4>
+        <label>
+            <input class="input-checkbox" id="ShipToAnotherAddress" name="ShipToAnotherAddress" ng-model="$ctrl.shipToAnotherAddress" type="checkbox" ng-change="validateCheckout(checkout)" /> Ship to different address
+        </label>
+    </h4>
+    <div ng-if="$ctrl.shipToAnotherAddress">
+        <vc-address address="$ctrl.member.deliveryAddress" validation-container="$ctrl" countries="$ctrl.availCountries" get-country-regions="$ctrl.getCountryRegions(country)" edit-mode="true"></vc-address>
     </div>
 </form>

@@ -1,36 +1,41 @@
 {% layout settings.customer_layout %}
 
-<div class="grid">
+<div class="grid" ng-controller="accountRegisterController">
+    <div class="grid-item large--four-sixths push--large--one-sixth">
+        <h1>{{ 'customer.register.title' | t }}</h1>
 
-  <div class="grid-item large--one-third push--large--one-third text-center">
+        <div>By creating an account with our store, you will be able to move trough the checkout process faster, store multiple addresses, view and track your orders in your account, and more.</div>
+        <p></p>
+        <vc-errors message="errorMessage" errors="errors"></vc-errors>
 
-    <h1>{{ 'customer.register.title' | t }}</h1>
+        <div class="grid vc-form">
+            <div class="grid-item large--four-fifths">
+                <div ng-init="init('{{ shop.id }}')">
+                    <div ng-show="!complete">
+                        <vc-member-detail member="newMember" member-component="memberComponent" fields-config="registerMemberFieldsConfig"></vc-member-detail>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    {% form 'create_customer' %}
-
-      {% include 'form-errors-custom' %}
-
-      <label for="first_name" class="hidden-label">{{ 'customer.register.first_name' | t }}</label>
-      <input type="text" value="{{form.first_name}}" name="customer[first_name]" id="first_name" placeholder="{{ 'customer.register.first_name' | t }}" {% if form.errors contains "first_name" %} class="error"{% endif %} autocapitalize="words" autofocus>
-
-      <label for="last_name" class="hidden-label">{{ 'customer.register.last_name' | t }}</label>
-      <input type="text" value="{{form.last_name}}" name="customer[last_name]" id="last_name" placeholder="{{ 'customer.register.last_name' | t }}" {% if form.errors contains "last_name" %} class="error"{% endif %} autocapitalize="words">
-
-      <label for="email" class="hidden-label">{{ 'customer.register.email' | t }}</label>
-      <input type="email" value="{{form.email}}" name="customer[email]" id="email" placeholder="{{ 'customer.register.email' | t }}" {% if form.errors contains "email" %} class="error"{% endif %} autocorrect="off" autocapitalize="off">
-
-      <label for="user_name" class="hidden-label">{{ 'customer.register.user_name' | t }}</label>
-      <input type="text" value="" name="customer[user_name]" id="user_name" placeholder="{{ 'customer.register.user_name' | t }}" {% if form.errors contains "user_name" %} class="error" {% endif %} autocorrect="off" autocapitalize="off">
-
-      <label for="password" class="hidden-label">{{ 'customer.register.password' | t }}</label>
-      <input type="password" minlength="5" value="" name="customer[password]" id="create_password" placeholder="{{ 'customer.register.password' | t }}" {% if form.errors contains "password" %} class="error"{% endif %}>
-      <p>
-        <input type="submit" value="{{ 'customer.register.submit' | t }}" class="btn">
-      </p>
-      {{ 'customer.register.or' | t }} <a href="{{ shop.url }}">{{ 'customer.register.cancel' | t }}</a>
-
-      {% endform %}
-
-  </div>
-
+    <div class="grid-item large--four-sixths push--large--one-twelfth">
+        <div class="grid">
+            <div class="grid-item large--three-sixths">
+                <p></p>
+                <a href="{{ shop.url }}">{{ 'customer.register.cancel' | t }}</a>
+            </div>
+            <div class="grid-item large--three-sixths text-right">
+                <button ng-click="register()" ng-disabled="loader.isLoading" class="vc-btn" ng-class="{ 'btn--disabled': memberForm.$pristine, 'loading': loader.isLoading }">
+                    <span class="btn-text">{{ 'customer.register.submit' | t }}</span>
+                    <span class="btn-loading"></span>
+                </button>
+            </div>
+            <!--<div ng-show="complete">
+                <h5>{{ 'customer.register.registration_success_text' | t }}</h5>
+                <br />
+                <p>{{ 'customer.register.goto_text' | t }} <a href="account/login">{{ 'customer.register.login_page_text' | t }}</a></p>
+            </div>-->
+        </div>
+    </div>
 </div>

@@ -1,4 +1,4 @@
-﻿angular.module('storefront.account')
+angular.module('storefront.account')
     .factory('storefront.wholesalersApi', ['$resource', 'apiBaseUrl', function ($resource, apiBaseUrl) {
         return $resource(apiBaseUrl + 'api/', {}, {
             getWholesalersList: { url: 'storefrontapi/wholesalers', isArray: true },
@@ -26,7 +26,7 @@
 }])
 .factory('storefront.corporateRegisterApi', ['$resource', 'apiBaseUrl', function ($resource, apiBaseUrl) {
     return $resource(apiBaseUrl + 'api/b2b/register', {}, {
-        register: { url: apiBaseUrl + 'api/b2b/register', method: 'POST' },
+        register: { url: 'account/register', method: 'POST' },
         registerMember: { url: apiBaseUrl + 'api/b2b/registerMember', method: 'POST' },
         getRegisterInfoByInvite: { url: apiBaseUrl + 'api/b2b/registerMember/:invite' },
         registerByInvite: { url: apiBaseUrl + 'api/b2b/registerMember/:invite', method: 'POST' }
