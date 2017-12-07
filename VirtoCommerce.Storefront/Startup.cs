@@ -243,7 +243,6 @@ namespace VirtoCommerce.Storefront
             app.UseAuthentication();
 
             app.UseMiddleware<WorkContextBuildMiddleware>();
-            app.UseMiddleware<ActiveWholesalerMiddleware>();
             app.UseMiddleware<StoreMaintenanceMiddleware>();
             app.UseMiddleware<NoLiquidThemeMiddleware>();
             app.UseMiddleware<ApiErrorHandlingMiddleware>();

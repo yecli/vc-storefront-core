@@ -10,5 +10,8 @@ namespace VirtoCommerce.Storefront.Model.Customer
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
+        public string License { get; set; }
+        public string Outlet { get; set; }
+        public string TaxId { get; set; }
     }
 }
