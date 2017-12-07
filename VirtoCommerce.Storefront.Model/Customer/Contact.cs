@@ -49,6 +49,7 @@ namespace VirtoCommerce.Storefront.Model.Customer
             }
         }
         public string Phone { get; set; }
+
         public string Outlet
         {
             get
@@ -94,7 +95,7 @@ namespace VirtoCommerce.Storefront.Model.Customer
 
         [JsonIgnore]
         [IgnoreDataMember]
-        public System.Collections.Generic.IList<Wholesaler.Wholesaler> Wholesalers { get; set; }
+        public IMutablePagedList<Wholesaler.Wholesaler> Wholesalers { get; set; }
 
     }
 }

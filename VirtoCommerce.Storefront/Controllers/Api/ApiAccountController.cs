@@ -49,7 +49,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
                 await _publisher.Publish(new UserRegisteredEvent(WorkContext, user, formModel));
                 await _signInManager.SignInAsync(user, isPersistent: true);
                 await _publisher.Publish(new UserLoginEvent(WorkContext, user));
-                return Json(new { RedirectUrl = UrlBuilder.ToAppAbsolute("~/account") });
+                return Json(new { RedirectUrl = UrlBuilder.ToAppAbsolute("~/account#/wholesalers") });
             }
 
             return Json(new { Errors = result.Errors });

@@ -185,7 +185,8 @@ namespace VirtoCommerce.Storefront.Controllers
         public async Task<ActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return View("wholesaler/landing");
+            var defaultStore = WorkContext.AllStores.FirstOrDefault(x => x.Id == "Default");
+            return base.Redirect(UrlBuilder.ToAppAbsolute("~/wholesalers/landing", defaultStore, defaultStore.DefaultLanguage));
         }
 
 
