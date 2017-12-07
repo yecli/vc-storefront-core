@@ -22,7 +22,8 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             if(!WorkContext.CurrentUser.IsRegisteredUser)
             {
-                return View("wholesaler/landing");
+                var defaultStore = WorkContext.AllStores.FirstOrDefault(x => x.Id == "Default");
+                return base.Redirect(UrlBuilder.ToAppAbsolute("~/wholesalers/landing", defaultStore, defaultStore.DefaultLanguage));
             }
             else if (WorkContext.CurrentWholesaler == null)
             {

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using PagedList.Core;
 using VirtoCommerce.Storefront.AutoRestClients.CustomerModuleApi;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
@@ -37,48 +38,57 @@ namespace VirtoCommerce.Storefront.Domain.Wholesaler
         {
             var workContext = _workContextAccessor.WorkContext;
 
-            var result = await base.GetContactByIdAsync(contactId);
+            var result = await base.GetContactByIdAsync(contactId);          
+            result.Wholesalers = LazyLoadCustomerWholesalers(result);
 
-            if (!_customerWholesalers.TryGetValue(result.Id, out var customerWholesalers))
-            {
-                _customerWholesalers[result.Id] = customerWholesalers = new List<Model.Wholesaler.Wholesaler>();
-
-                var allStores = _workContextAccessor.WorkContext.AllStores;
-                var organizations = _customerApi.ListOrganizations();
-                foreach (var store in allStores)
-                {
-                    var organization = organizations.FirstOrDefault(x => x.Name.EqualsInvariant(store.Id));
-                    if (organization != null)
-                    {
-                        var wholesaler = customerWholesalers.FirstOrDefault(x => x.Id == store.Id);
-                        if (wholesaler == null)
-                        {
-                            wholesaler = new Model.Wholesaler.Wholesaler
-                            {
-                                Id = store.Id,
-                                Logo = organization.DynamicProperties.Select(x => x.ToDynamicProperty()).GetDynamicPropertyValue("logo"),
-                                Email = organization.Emails?.FirstOrDefault() ?? store.Email,
-                                Phone = organization.Phones?.FirstOrDefault(),
-                                Description = organization?.Description,
-                                Name = organization.Name,
-                                Address = store.PrimaryFullfilmentCenter?.Address,
-                                Url = _urlBuilder.ToAppAbsolute("~/", store, store.DefaultLanguage)
-                            };
-                            var agreement = new DeliveryAgreementRequest
-                            {
-                                Id = $"{ wholesaler.Id }-{ contactId }-AGR",
-                                Wholesaler = wholesaler,
-                                Status = DeliveryAgreementStatus.NotSent
-                            };
-                            wholesaler.AgreementRequest = agreement;
-                            customerWholesalers.Add(wholesaler);
-                        }
-                    }
-                }
-            }
-            result.Wholesalers = customerWholesalers;
             return result;
 
+        }
+
+        protected virtual IMutablePagedList<Model.Wholesaler.Wholesaler> LazyLoadCustomerWholesalers(Contact customer)
+        {           
+            Func<int, int, IEnumerable<SortInfo>, IPagedList<Model.Wholesaler.Wholesaler>> wholesalersGetter = (pageNumber, pageSize, sortInfos) =>
+            {
+                if (!_customerWholesalers.TryGetValue(customer.Id, out var customerWholesalers))
+                {
+                    _customerWholesalers[customer.Id] = customerWholesalers = new List<Model.Wholesaler.Wholesaler>();
+
+                    var allStores = _workContextAccessor.WorkContext.AllStores;
+                    var organizations = _customerApi.ListOrganizations();
+                    foreach (var store in allStores)
+                    {
+                        var organization = organizations.FirstOrDefault(x => x.Name.EqualsInvariant(store.Id));
+                        if (organization != null)
+                        {
+                            var wholesaler = customerWholesalers.FirstOrDefault(x => x.Id == store.Id);
+                            if (wholesaler == null)
+                            {
+                                wholesaler = new Model.Wholesaler.Wholesaler
+                                {
+                                    Id = store.Id,
+                                    Logo = organization.DynamicProperties.Select(x => x.ToDynamicProperty()).GetDynamicPropertyValue("logo"),
+                                    Email = organization.Emails?.FirstOrDefault() ?? store.Email,
+                                    Phone = organization.Phones?.FirstOrDefault(),
+                                    Description = organization?.Description,
+                                    Name = organization.Name,
+                                    Address = store.PrimaryFullfilmentCenter?.Address,
+                                    Url = _urlBuilder.ToAppAbsolute("~/", store, store.DefaultLanguage)
+                                };
+                                var agreement = new DeliveryAgreementRequest
+                                {
+                                    Id = $"{ wholesaler.Id }-{ customer.Id }-AGR",
+                                    Wholesaler = wholesaler,
+                                    Status = DeliveryAgreementStatus.NotSent
+                                };
+                                wholesaler.AgreementRequest = agreement;
+                                customerWholesalers.Add(wholesaler);
+                            }
+                        }                      
+                    }
+                }
+                return new StaticPagedList<Model.Wholesaler.Wholesaler>(customerWholesalers, pageNumber, pageSize, customerWholesalers.Count());
+            };
+            return new MutablePagedList<Model.Wholesaler.Wholesaler>(wholesalersGetter, 1, 20);
         }
 
         public Task Handle(ConfirmDeliveryAgreementEvent message)

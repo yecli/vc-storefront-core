@@ -28,7 +28,10 @@ namespace VirtoCommerce.Storefront.Domain.Customer.Handlers
                 Name = registrationData.UserName,
                 FullName = string.Join(" ", registrationData.FirstName, registrationData.LastName),
                 FirstName = registrationData.FirstName,
-                LastName = registrationData.LastName                
+                LastName = registrationData.LastName,
+                Outlet = registrationData.Outlet,
+                TaxId = registrationData.TaxId,
+                License = registrationData.License
             };
             if (!string.IsNullOrEmpty(registrationData.Email))
             {

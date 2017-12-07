@@ -6,12 +6,13 @@ namespace VirtoCommerce.Storefront.Model.Common
 {
     public static class DynamicPropertiesExtensions
     {
-        public static void SetDynamicPropertySingleValue(this IEnumerable<DynamicProperty> properties, string propertyName, string valueType, Language language, string value)
+        public static void SetDynamicPropertySingleValue(this IList<DynamicProperty> properties, string propertyName, string valueType, Language language, string value)
         {
             var property = properties.FirstOrDefault(v => v.Name.EqualsInvariant(propertyName) && v.Values != null);
             if(property == null)
             {
                 property = new Model.DynamicProperty { Name = propertyName, ValueType = "ShortText" };
+                properties.Add(property);
             }
             property.Values = new List<LocalizedString> { new LocalizedString(Language.InvariantLanguage, value) };          
         }
