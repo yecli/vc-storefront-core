@@ -1,4 +1,4 @@
-{% capture collection_title %}{{ collection.title }}{% endcapture %}
+﻿{% capture collection_title %}{{ collection.title }}{% endcapture %}
 
 <div class="section-header">
   <p class="h1 section-header--left">{{ collection_title }}</p>
@@ -9,7 +9,7 @@
 
 {% assign grid_item_width = 'large--one-fifth medium--one-half' %}
 
-<div class="grid">
+<div class="grid-uniform">
   {% if collection.products %}
     {% comment %}
       Default collection order
