@@ -1,6 +1,8 @@
 ﻿{% for login_provider in external_login_providers %}
     {% assign external_login_url = 'account/externallogin?authType=' | append: login_provider.authentication_type %}
-    <a class="btn" href="{{ external_login_url | absolute_url }}">{{ login_provider.caption }}</a>
+    <p>
+        <a class="btn" href="{{ external_login_url | absolute_url }}">{{ login_provider.caption }}</a>
+    <p/>
 {% endfor %}
 
 {% form 'customer_login' %}
