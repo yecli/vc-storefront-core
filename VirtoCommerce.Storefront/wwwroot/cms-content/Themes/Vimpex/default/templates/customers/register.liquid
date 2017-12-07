@@ -1,4 +1,4 @@
-{% layout settings.customer_layout %}
+﻿{% layout settings.customer_layout %}
 
 <div class="grid" ng-controller="accountRegisterController">
     <div class="grid-item large--four-sixths push--large--one-sixth">
@@ -6,7 +6,12 @@
 
         <div>By creating an account with our store, you will be able to move trough the checkout process faster, store multiple addresses, view and track your orders in your account, and more.</div>
         <p></p>
-        <vc-errors message="errorMessage" errors="errors"></vc-errors>
+        <div class="note form-error" ng-if="errors" ng-cloak>
+            <p>{{ 'general.forms.post_error' | t }}</p>
+            <ul class="disc">
+                <li ng-repeat="error in errors" ng-bind-html="error.description"></li>
+            </ul>
+        </div>
 
         <div class="grid vc-form">
             <div class="grid-item large--four-fifths">

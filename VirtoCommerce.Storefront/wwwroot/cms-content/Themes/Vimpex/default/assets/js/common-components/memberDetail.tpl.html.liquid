@@ -1,11 +1,11 @@
-<form accept-charset="UTF8" name="memberDetailForm" novalidate="novalidate">
+﻿<form accept-charset="UTF8" name="memberDetailForm" novalidate="novalidate">
     <p></p>
     <h4>Login information</h4>
     <div class="form-fieldset" ng-init="$ctrl.setForm(memberDetailForm)">
         <div class="form-group">
             <div class="cols">
                 <div class="col col-50">
-                    <vc-labeled-input value="$ctrl.member.email" name="Email" type="email" placeholder="{{ 'customer.register.email' | t }}" form="$ctrl.form" required="$ctrl.requiredField('Email')" ng-show="$ctrl.showField('Email')" disabled="$ctrl.disableField('Email')"></vc-labeled-input>
+                    <vc-labeled-input value="$ctrl.member.email" name="Email" type="email" placeholder="{{ 'customer.register.email' | t }}" form="$ctrl.form" required="$ctrl.requiredField('Email')" autofocus="true" ng-show="$ctrl.showField('Email')" disabled="$ctrl.disableField('Email')"></vc-labeled-input>
                 </div>
             </div>
         </div>

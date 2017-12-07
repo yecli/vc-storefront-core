@@ -1929,13 +1929,30 @@ storefrontApp.controller('accountRegisterController', ['$q', '$scope', 'storefro
         $scope.register = function () {
             $scope.error = null;
             $scope.loader.wrapLoading(function () {
+                $scope.errors = null;
+
                 return accountApi.register($scope.newMember, function (result) {
-                    $scope.complete = true;
+                    if (result.redirectUrl) {
+                        $scope.outerRedirect(result.redirectUrl)
+                    } else if (_.any(result.errors)) {
+                        $scope.errors = result.errors;
+                        scrollToTop();
+                    } else {
+                        $scope.complete = true;
+                    }
                 }, function (rejection) {
                 }).$promise;
             });
-
         };
+
+        // smooth scroll to window top
+        function scrollToTop() {
+            var currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
+            if (currentScroll > 0) {
+                window.requestAnimationFrame(scrollToTop);
+                window.scrollTo(0, currentScroll - (currentScroll / 5) - 20);
+            }
+        }
     }]);
 
 angular.module('storefront.account')
