@@ -68,6 +68,8 @@ namespace VirtoCommerce.Storefront.Middleware
             await builder.WithUserContactAsync();
             await builder.WithVendorsAsync(workContext.CurrentStore, workContext.CurrentLanguage);
 
+            builder.WithWholesaler();
+
             _workContextAccessor.WorkContext = workContext;
          
 

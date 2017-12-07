@@ -10,7 +10,7 @@ using VirtoCommerce.Storefront.Model.Security;
 
 namespace VirtoCommerce.Storefront.Domain.Security
 {
-    public static class AuthWorkContextBuilderExtensions
+    public static class WholesalerWorkContextBuilderExtensions
     {
         public static async Task WithCurrentUserAsync(this IWorkContextBuilder builder)
         {

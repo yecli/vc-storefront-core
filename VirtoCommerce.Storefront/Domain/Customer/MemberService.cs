@@ -90,6 +90,9 @@ namespace VirtoCommerce.Storefront.Domain
                 existContact.FirstName = contactUpdateInfo.FirstName;
                 existContact.LastName = contactUpdateInfo.LastName;
                 existContact.Email = contactUpdateInfo.Email;
+                existContact.License = contactUpdateInfo.License;
+                existContact.Outlet = contactUpdateInfo.Outlet;
+                existContact.TaxId = contactUpdateInfo.TaxId;
 
                 var contactDto = existContact.ToCustomerContactDto();
                 await _customerApi.UpdateContactAsync(contactDto);

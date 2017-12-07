@@ -42,41 +42,41 @@ namespace VirtoCommerce.Storefront.Domain.Wholesaler
             if (!_customerWholesalers.TryGetValue(result.Id, out var customerWholesalers))
             {
                 _customerWholesalers[result.Id] = customerWholesalers = new List<Model.Wholesaler.Wholesaler>();
-            }
-            var allStores = _workContextAccessor.WorkContext.AllStores;
-            var organizations = _customerApi.ListOrganizations();
-            foreach (var store in allStores)
-            {
-                var organization = organizations.FirstOrDefault(x => x.Name.EqualsInvariant(store.Id));
-                if (organization != null)
+
+                var allStores = _workContextAccessor.WorkContext.AllStores;
+                var organizations = _customerApi.ListOrganizations();
+                foreach (var store in allStores)
                 {
-                    var wholesaler = customerWholesalers.FirstOrDefault(x => x.Id == store.Id);
-                    if (wholesaler == null)
+                    var organization = organizations.FirstOrDefault(x => x.Name.EqualsInvariant(store.Id));
+                    if (organization != null)
                     {
-                        wholesaler = new Model.Wholesaler.Wholesaler
+                        var wholesaler = customerWholesalers.FirstOrDefault(x => x.Id == store.Id);
+                        if (wholesaler == null)
                         {
-                            Id = store.Id,
-                            Logo = organization.DynamicProperties.Select(x => x.ToDynamicProperty()).GetDynamicPropertyValue("logo"),
-                            Email = organization.Emails?.FirstOrDefault() ?? store.Email,
-                            Phone = organization.Phones?.FirstOrDefault(),
-                            Description = organization?.Description,
-                            Name = organization.Name,
-                            Address = store.PrimaryFullfilmentCenter?.Address,
-                            Url = _urlBuilder.ToAppAbsolute("~/", store, store.DefaultLanguage)
-                        };
-                        var agreement = new DeliveryAgreementRequest
-                        {
-                            Id = $"{ wholesaler.Id }-{ contactId }-AGR",
-                            Wholesaler = wholesaler,
-                            Status = DeliveryAgreementStatus.NotSent
-                        };
-                        wholesaler.AgreementRequest = agreement;
-                        customerWholesalers.Add(wholesaler);
+                            wholesaler = new Model.Wholesaler.Wholesaler
+                            {
+                                Id = store.Id,
+                                Logo = organization.DynamicProperties.Select(x => x.ToDynamicProperty()).GetDynamicPropertyValue("logo"),
+                                Email = organization.Emails?.FirstOrDefault() ?? store.Email,
+                                Phone = organization.Phones?.FirstOrDefault(),
+                                Description = organization?.Description,
+                                Name = organization.Name,
+                                Address = store.PrimaryFullfilmentCenter?.Address,
+                                Url = _urlBuilder.ToAppAbsolute("~/", store, store.DefaultLanguage)
+                            };
+                            var agreement = new DeliveryAgreementRequest
+                            {
+                                Id = $"{ wholesaler.Id }-{ contactId }-AGR",
+                                Wholesaler = wholesaler,
+                                Status = DeliveryAgreementStatus.NotSent
+                            };
+                            wholesaler.AgreementRequest = agreement;
+                            customerWholesalers.Add(wholesaler);
+                        }
                     }
                 }
-
-                result.Wholesalers = customerWholesalers;
             }
+            result.Wholesalers = customerWholesalers;
             return result;
 
         }

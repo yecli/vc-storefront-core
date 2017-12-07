@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common.Events;
@@ -8,7 +9,7 @@ using VirtoCommerce.Storefront.Model.Security.Events;
 
 namespace VirtoCommerce.Storefront.Domain.Customer.Handlers
 {
-    public class SecurityEventsHandler : IEventHandler<UserRegisteredEvent>
+    public class SecurityEventsHandler : IEventHandler<UserRegisteredEvent>, IEventHandler<UserLoginEvent>
     {
         private readonly IMemberService _memberService;
         public SecurityEventsHandler(IMemberService memberService)
@@ -39,13 +40,26 @@ namespace VirtoCommerce.Storefront.Domain.Customer.Handlers
             }          
             if(registrationData.DefaultBillingAddress != null)
             {
+                registrationData.DefaultBillingAddress.FirstName = registrationData.FirstName;
+                registrationData.DefaultBillingAddress.LastName = registrationData.LastName;
                 contact.Addresses.Add(registrationData.DefaultBillingAddress);
             }
             if(registrationData.DefaultShippingAddress != null)
             {
+                registrationData.DefaultShippingAddress.FirstName = registrationData.FirstName;
+                registrationData.DefaultShippingAddress.LastName = registrationData.LastName;
                 contact.Addresses.Add(registrationData.DefaultShippingAddress);
             }
             await _memberService.CreateContactAsync(contact);
+        }
+
+        public Task Handle(UserLoginEvent message)
+        {
+            message.User.Contact = new Lazy<Contact>(() =>
+            {
+                return _memberService.GetContactById(message.User.ContactId);
+            });
+            return Task.CompletedTask;
         }
         #endregion
     }

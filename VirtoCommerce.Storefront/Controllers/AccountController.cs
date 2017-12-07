@@ -141,7 +141,22 @@ namespace VirtoCommerce.Storefront.Controllers
                 if (user.AllowedStores.IsNullOrEmpty() || user.AllowedStores.Any(x => x.EqualsInvariant(WorkContext.CurrentStore.Id)))
                 {
                     await _publisher.Publish(new UserLoginEvent(WorkContext, user));
-                    return StoreFrontRedirect(returnUrl);
+
+                    //Redirect to active wholesaler store
+                    WorkContext.CurrentWholesaler = user.Contact.Value.Wholesalers.FirstOrDefault(x => x.IsActive);
+                    if(WorkContext.CurrentWholesaler != null)
+                    {
+                        var wholesalerStore = WorkContext.AllStores.FirstOrDefault(x => x.Id == WorkContext.CurrentWholesaler.Id);
+                        if (wholesalerStore != null)
+                        {
+                            returnUrl = UrlBuilder.ToAppAbsolute(returnUrl ?? "~/", wholesalerStore, wholesalerStore.DefaultLanguage);
+                        }
+                    }
+                    else
+                    {
+                        returnUrl = UrlBuilder.ToAppAbsolute(returnUrl ?? "~/account#/wholesalers");
+                    }
+                    return base.Redirect(returnUrl);
                 }
                 else
                 {

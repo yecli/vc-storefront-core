@@ -23,7 +23,10 @@
                     {
                         firstName: customer.firstName,
                         lastName: customer.lastName,
-                        email: customer.email
+                        email: customer.email,
+                        license: customer.license,
+                        outlet: customer.outlet,
+                        taxId: customer.taxId
                     };
                 }
             });
