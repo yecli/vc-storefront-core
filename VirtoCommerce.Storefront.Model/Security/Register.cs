@@ -16,7 +16,5 @@ namespace VirtoCommerce.Storefront.Model.Security
         [FromForm(Name = "customer[password]")]
         public string Password { get; set; }
 
-        [FromBody]
-        public Contact Contact { get; set; }
     }
 }
