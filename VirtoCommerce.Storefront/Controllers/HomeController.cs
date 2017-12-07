@@ -6,14 +6,32 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.Storefront.Models;
 using VirtoCommerce.Storefront.Infrastructure;
+using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
-    public class HomeController : Controller
-    {       
+    public class HomeController : StorefrontControllerBase
+    {
+        public HomeController(IWorkContextAccessor workContextAccessor, IStorefrontUrlBuilder urlBuilder)
+            : base(workContextAccessor, urlBuilder)
+        {     
+        }
+
         public IActionResult Index()
         {
-            return View("index");
+            if(!WorkContext.CurrentUser.IsRegisteredUser)
+            {
+                return View("wholesaler/landing");
+            }
+            else if (WorkContext.CurrentWholesaler == null)
+            {
+                return StoreFrontRedirect("~/account#/wholesalers");
+            }
+            else 
+            {
+                return View("index");
+            }
         }
 
         [StorefrontRoute("about")]

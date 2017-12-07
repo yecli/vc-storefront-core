@@ -185,7 +185,7 @@ namespace VirtoCommerce.Storefront.Controllers
         public async Task<ActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return StoreFrontRedirect("~/");
+            return View("wholesaler/landing");
         }
 
 
