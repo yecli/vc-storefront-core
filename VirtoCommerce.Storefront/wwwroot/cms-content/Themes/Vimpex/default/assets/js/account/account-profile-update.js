@@ -1,45 +1,36 @@
 ﻿angular.module('storefront.account')
 .component('vcAccountProfileUpdate', {
-    templateUrl: "themes/assets/account-profile-update.tpl.liquid",
+    templateUrl: "themes/assets/js/account/account-profile-update.tpl.liquid",
+    bindings: {
+        $router: '<'
+    },
     require: {
         accountManager: '^vcAccountManager'
     },
-    controller: ['$q', '$scope', 'storefrontApp.mainContext', 'storefront.corporateAccountApi', 'storefront.corporateApiErrorHelper', 'loadingIndicatorService', function ($q, $scope, mainContext, corporateAccountApi, corporateApiErrorHelper, loader) {
+    controller: ['storefrontApp.mainContext', '$scope', 'loadingIndicatorService', function (mainContext, $scope, loader) {
         var $ctrl = this;
         $ctrl.loader = loader;
-
+        
         $scope.$watch(
             function () { return mainContext.customer; },
             function (customer) {
+                $ctrl.customer = customer;
                 if (customer) {
-                    loader.wrapLoading(function() {
-                        return corporateAccountApi.getCompanyMember({ id: customer.id }, function(member) {
-                            $ctrl.member = {
-                                id: member.id,
-                                firstName: member.firstName,
-                                lastName: member.lastName,
-                                email: _.first(member.emails),
-                                organizations: member.organizations,
-                                title: member.title,
-                                addresses: member.addresses,
-                                securityAccounts: member.securityAccounts
-                            };
-                        }).$promise;
-                    });
+                    if (customer.isContract) {
+                        $ctrl.$router.navigate(['Orders']);
+                    }
+                    $ctrl.changeData =
+                    {
+                        firstName: customer.firstName,
+                        lastName: customer.lastName,
+                        email: customer.email
+                    };
                 }
             });
 
         $ctrl.submit = function () {
-            $ctrl.member.fullName = $ctrl.member.firstName + ' ' + $ctrl.member.lastName;
-            $ctrl.member.emails = [$ctrl.member.email];
-
-            return loader.wrapLoading(function () {
-                return corporateAccountApi.updateCompanyMember($ctrl.member, function(response) {
-                    corporateApiErrorHelper.clearErrors($scope);
-                }, function (rejection){
-                    corporateApiErrorHelper.handleErrors($scope, rejection);
-                }).$promise;
-            });
+            // no validation
+            $ctrl.accountManager.updateProfile($ctrl.changeData);
         };
     }]
 });

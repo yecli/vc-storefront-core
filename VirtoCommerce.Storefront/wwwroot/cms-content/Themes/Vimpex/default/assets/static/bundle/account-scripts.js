@@ -3,18 +3,6 @@
  */
 ;window.Modernizr=function(a,b,c){function z(a){j.cssText=a}function A(a,b){return z(m.join(a+";")+(b||""))}function B(a,b){return typeof a===b}function C(a,b){return!!~(""+a).indexOf(b)}function D(a,b){for(var d in a){var e=a[d];if(!C(e,"-")&&j[e]!==c)return b=="pfx"?e:!0}return!1}function E(a,b,d){for(var e in a){var f=b[a[e]];if(f!==c)return d===!1?a[e]:B(f,"function")?f.bind(d||b):f}return!1}function F(a,b,c){var d=a.charAt(0).toUpperCase()+a.slice(1),e=(a+" "+o.join(d+" ")+d).split(" ");return B(b,"string")||B(b,"undefined")?D(e,b):(e=(a+" "+p.join(d+" ")+d).split(" "),E(e,b,c))}var d="2.8.2",e={},f=!0,g=b.documentElement,h="modernizr",i=b.createElement(h),j=i.style,k,l={}.toString,m=" -webkit- -moz- -o- -ms- ".split(" "),n="Webkit Moz O ms",o=n.split(" "),p=n.toLowerCase().split(" "),q={},r={},s={},t=[],u=t.slice,v,w=function(a,c,d,e){var f,i,j,k,l=b.createElement("div"),m=b.body,n=m||b.createElement("body");if(parseInt(d,10))while(d--)j=b.createElement("div"),j.id=e?e[d]:h+(d+1),l.appendChild(j);return f=["&#173;",'<style id="s',h,'">',a,"</style>"].join(""),l.id=h,(m?l:n).innerHTML+=f,n.appendChild(l),m||(n.style.background="",n.style.overflow="hidden",k=g.style.overflow,g.style.overflow="hidden",g.appendChild(n)),i=c(l,a),m?l.parentNode.removeChild(l):(n.parentNode.removeChild(n),g.style.overflow=k),!!i},x={}.hasOwnProperty,y;!B(x,"undefined")&&!B(x.call,"undefined")?y=function(a,b){return x.call(a,b)}:y=function(a,b){return b in a&&B(a.constructor.prototype[b],"undefined")},Function.prototype.bind||(Function.prototype.bind=function(b){var c=this;if(typeof c!="function")throw new TypeError;var d=u.call(arguments,1),e=function(){if(this instanceof e){var a=function(){};a.prototype=c.prototype;var f=new a,g=c.apply(f,d.concat(u.call(arguments)));return Object(g)===g?g:f}return c.apply(b,d.concat(u.call(arguments)))};return e}),q.touch=function(){var c;return"ontouchstart"in a||a.DocumentTouch&&b instanceof DocumentTouch?c=!0:w(["@media (",m.join("touch-enabled),("),h,")","{#modernizr{top:9px;position:absolute}}"].join(""),function(a){c=a.offsetTop===9}),c},q.csstransforms=function(){return!!F("transform")},q.csstransforms3d=function(){var a=!!F("perspective");return a&&"webkitPerspective"in g.style&&w("@media (transform-3d),(-webkit-transform-3d){#modernizr{left:9px;position:absolute;height:3px;}}",function(b,c){a=b.offsetLeft===9&&b.offsetHeight===3}),a},q.fontface=function(){var a;return w('@font-face {font-family:"font";src:url("https://")}',function(c,d){var e=b.getElementById("smodernizr"),f=e.sheet||e.styleSheet,g=f?f.cssRules&&f.cssRules[0]?f.cssRules[0].cssText:f.cssText||"":"";a=/src/i.test(g)&&g.indexOf(d.split(" ")[0])===0}),a};for(var G in q)y(q,G)&&(v=G.toLowerCase(),e[v]=q[G](),t.push((e[v]?"":"no-")+v));return e.addTest=function(a,b){if(typeof a=="object")for(var d in a)y(a,d)&&e.addTest(d,a[d]);else{a=a.toLowerCase();if(e[a]!==c)return e;b=typeof b=="function"?b():b,typeof f!="undefined"&&f&&(g.className+=" supports-"+(b?"":"no-")+a),e[a]=b}return e},z(""),i=k=null,e._version=d,e._prefixes=m,e._domPrefixes=p,e._cssomPrefixes=o,e.testProp=function(a){return D([a])},e.testAllProps=F,e.testStyles=w,g.className=g.className.replace(/(^|\s)no-js(\s|$)/,"$1$2")+(f?" supports-js supports-"+t.join(" supports-"):""),e}(this,this.document);
 var storefrontApp = angular.module('storefrontApp');
-storefrontApp.component('vcErrors', {
-    templateUrl: "themes/assets/errors.tpl.html",
-    bindings: {
-        message: '<',
-        errors: '<'
-    },
-    controller: [function () {
-        var $ctrl = this;
-    }]
-});
-
-var storefrontApp = angular.module('storefrontApp');
 
 storefrontApp.service('dialogService', ['$uibModal', function ($uibModal) {
     return {
@@ -1146,141 +1134,6 @@ storefrontApp.component('vcLineItems', {
 });
 
 var storefrontApp = angular.module('storefrontApp');
-storefrontApp.component('vcMember', {
-    templateUrl: "themes/assets/member.tpl.html",
-    bindings: {
-        member: '=',
-        memberComponent: '='
-    },
-    controller: ['$scope', function ($scope) {
-        var $ctrl = this;
-
-        this.$onInit = function () {
-            $ctrl.memberComponent = this;
-        };
-
-        this.$onDestroy = function () {
-            $ctrl.memberComponent = null;
-        };
-
-        $ctrl.setForm = function (frm) { $ctrl.form = frm; };
-
-
-        $ctrl.validate = function () {
-            if ($ctrl.form) {
-                $ctrl.form.$setSubmitted();
-                return $ctrl.form.$valid;
-            }
-            return true;
-        };
-    }]
-});
-
-var storefrontApp = angular.module('storefrontApp');
-storefrontApp.component('vcMemberDetail', {
-    templateUrl: "themes/assets/memberDetail.tpl.html",
-    bindings: {
-        member: '=',
-        memberComponent: '=',
-        fieldsConfig: '<'
-    },
-    controller: ['$scope', function ($scope) {
-        var $ctrl = this;
-        
-        $ctrl.config = [
-            {
-                field: 'CompanyName',
-                disabled: false,
-                visible: true,
-                required: true
-            },
-            {
-                field: 'Email',
-                disabled: false,
-                visible: true,
-                required: true
-            },
-            {
-                field: 'UserName',
-                disabled: false,
-                visible: true
-            },
-            {
-                field: 'Password',
-                disabled: false,
-                visible: true
-            },
-            {
-                field: 'Roles',
-                disabled: false,
-                visible:  false
-            }
-        ];
-
-        if ($ctrl.fieldsConfig)
-            angular.extend($ctrl.config, $ctrl.fieldsConfig);
-
-        $ctrl.rolesComponent = null;
-
-        this.$onInit = function () {
-            $ctrl.memberComponent = this;
-        };
-
-        this.$onDestroy = function () {
-            $ctrl.memberComponent = null;
-        };
-
-        $ctrl.setForm = function (frm) {
-            $ctrl.form = frm;
-        };
-
-        $ctrl.validate = function () {
-            if ($ctrl.form) {
-                $ctrl.form.$setSubmitted();
-                return $ctrl.form.$valid;
-            }
-            return true;
-        };
-
-        $ctrl.showField = function (field) {
-            return getFieldConfig(field).visible == true;
-        }
-
-        $ctrl.disableField = function (field) {
-            return getFieldConfig(field).disabled == true;
-        }
-
-        $ctrl.requiredField = function (field) {
-            return getFieldConfig(field).required == true;
-        }
-
-        function getFieldConfig(field) {
-            var configItem = _.first(_.filter($ctrl.config, function (configItem) { return configItem.field === field; }));
-            return configItem;
-        }
-    }]
-});
-
-storefrontApp.directive('confirmPasswordValidation', function () {
-    return {
-        require: 'ngModel',
-        link: function (scope, elem, attr, ngModel) {
-            ngModel.$parsers.unshift(function (value, scope) {
-                var isValid = true;
-                var password = ngModel.$$parentForm.Password.$viewValue;
-
-                if (password) {
-                    isValid = password === value;
-                }
-
-                ngModel.$setValidity('confirmPasswordValidation', isValid);
-                return value;
-            });
-        }
-    };
-});
-
-var storefrontApp = angular.module('storefrontApp');
 
 storefrontApp.component('vcPaymentMethods', {
     templateUrl: "themes/assets/js/common-components/paymentMethods.tpl.html",
@@ -1341,6 +1194,7 @@ storefrontApp.component('vcTotals', {
 
 //Call this to register our module to main application
 var moduleName = "storefront.account";
+
 if (storefrontAppDependencies !== undefined) {
     storefrontAppDependencies.push(moduleName);
 }
@@ -1376,7 +1230,7 @@ angular.module(moduleName, ['ngResource', 'ngComponentRouter', 'credit-cards', '
          { path: '/wholesalers/...', name: 'Wholesalers', component: 'vcAccountWholesalers' },
          { path: '/wishlist', name: 'WishList', component: 'vcAccountLists' }
     ],
-    controller: ['$scope', '$timeout', 'storefront.accountApi', 'storefrontApp.mainContext', 'storefront.corporateAccountApi', 'loadingIndicatorService', function ($scope, $timeout, accountApi, mainContext, authService, corporateAccountApi, loader) {
+    controller: ['storefront.accountApi', 'storefrontApp.mainContext', 'loadingIndicatorService', function (accountApi, mainContext, loader) {
         var $ctrl = this;
         $ctrl.loader = loader;
 
@@ -1409,7 +1263,6 @@ angular.module(moduleName, ['ngResource', 'ngComponentRouter', 'credit-cards', '
                 return accountApi.changePassword(changePasswordData).$promise;
             });
         };
-
     }]
 })
 
@@ -1437,38 +1290,33 @@ angular.module(moduleName, ['ngResource', 'ngComponentRouter', 'credit-cards', '
 
 angular.module('storefront.account')
 .component('vcAccountAddresses', {
-    templateUrl: "themes/assets/account-addresses.tpl.liquid",
+    templateUrl: "themes/assets/js/account/account-addresses.tpl.liquid",
     require: {
         accountManager: '^vcAccountManager'
     },
-    controller: ['storefrontApp.mainContext', 'confirmService', '$translate', '$scope', 'storefront.corporateAccountApi', 'storefront.corporateApiErrorHelper', 'loadingIndicatorService', function (mainContext, confirmService, $translate, $scope, corporateAccountApi, corporateApiErrorHelper, loader) {
+    controller: ['storefrontApp.mainContext', 'confirmService', '$translate', '$scope', 'loadingIndicatorService', function (mainContext, confirmService, $translate, $scope, loader) {
         var $ctrl = this;
         $ctrl.loader = loader;
-        
+
         $scope.$watch(
-            function () { return mainContext.customer; },
-            function (customer) {
-                if (customer) {
-                    loader.wrapLoading(function() {
-                        return corporateAccountApi.getCompanyMember({ id: customer.id }, function (member) {
-                            $ctrl.currentMember = member;
-                        }).$promise;
-                    });
-                }
-            });
+          function () { return mainContext.customer.addresses; },
+          function () {
+              $ctrl.addresses = mainContext.customer.addresses;
+          }
+        );
 
         $ctrl.addNewAddress = function () {
             if (_.last(components).validate()) {
-                $ctrl.currentMember.addresses.push($ctrl.newAddress);
+                $ctrl.addresses.push($ctrl.newAddress);
                 $ctrl.newAddress = null;
-                $ctrl.updateCompanyMember($ctrl.currentMember);
+                $ctrl.accountManager.updateAddresses($ctrl.addresses);
             }
         };
 
         $ctrl.submit = function () {
             if (components[$ctrl.editIdx].validate()) {
-                angular.copy($ctrl.editItem, $ctrl.currentMember.addresses[$ctrl.editIdx]);
-                $ctrl.updateCompanyMember($ctrl.currentMember, $ctrl.cancel);
+                angular.copy($ctrl.editItem, $ctrl.addresses[$ctrl.editIdx]);
+                $ctrl.accountManager.updateAddresses($ctrl.addresses).then($ctrl.cancel);
             }
         };
 
@@ -1479,28 +1327,20 @@ angular.module('storefront.account')
 
         $ctrl.edit = function ($index) {
             $ctrl.editIdx = $index;
-            $ctrl.editItem = angular.copy($ctrl.currentMember.addresses[$ctrl.editIdx]);
+            $ctrl.editItem = angular.copy($ctrl.addresses[$ctrl.editIdx]);
         };
 
         $ctrl.delete = function ($index) {
             var showDialog = function (text) {
                 confirmService.confirm(text).then(function (confirmed) {
                     if (confirmed) {
-                        $ctrl.currentMember.addresses.splice($index, 1);
-                        $ctrl.updateCompanyMember($ctrl.currentMember);
+                        $ctrl.addresses.splice($index, 1);
+                        $ctrl.accountManager.updateAddresses($ctrl.addresses);
                     }
                 });
             };
 
             $translate('customer.addresses.delete_confirm').then(showDialog, showDialog);
-        };
-
-        $ctrl.updateCompanyMember = function (companyMember, handler) {
-            return loader.wrapLoading(function () {
-                return corporateAccountApi.updateCompanyMember(companyMember, handler, function (response) {
-                    corporateApiErrorHelper.clearErrors($scope);
-                }).$promise;
-            });
         };
 
         var components = [];
@@ -1857,46 +1697,37 @@ angular.module('storefront.account')
 
 angular.module('storefront.account')
 .component('vcAccountProfileUpdate', {
-    templateUrl: "themes/assets/account-profile-update.tpl.liquid",
+    templateUrl: "themes/assets/js/account/account-profile-update.tpl.liquid",
+    bindings: {
+        $router: '<'
+    },
     require: {
         accountManager: '^vcAccountManager'
     },
-    controller: ['$q', '$scope', 'storefrontApp.mainContext', 'storefront.corporateAccountApi', 'storefront.corporateApiErrorHelper', 'loadingIndicatorService', function ($q, $scope, mainContext, corporateAccountApi, corporateApiErrorHelper, loader) {
+    controller: ['storefrontApp.mainContext', '$scope', 'loadingIndicatorService', function (mainContext, $scope, loader) {
         var $ctrl = this;
         $ctrl.loader = loader;
-
+        
         $scope.$watch(
             function () { return mainContext.customer; },
             function (customer) {
+                $ctrl.customer = customer;
                 if (customer) {
-                    loader.wrapLoading(function() {
-                        return corporateAccountApi.getCompanyMember({ id: customer.id }, function(member) {
-                            $ctrl.member = {
-                                id: member.id,
-                                firstName: member.firstName,
-                                lastName: member.lastName,
-                                email: _.first(member.emails),
-                                organizations: member.organizations,
-                                title: member.title,
-                                addresses: member.addresses,
-                                securityAccounts: member.securityAccounts
-                            };
-                        }).$promise;
-                    });
+                    if (customer.isContract) {
+                        $ctrl.$router.navigate(['Orders']);
+                    }
+                    $ctrl.changeData =
+                    {
+                        firstName: customer.firstName,
+                        lastName: customer.lastName,
+                        email: customer.email
+                    };
                 }
             });
 
         $ctrl.submit = function () {
-            $ctrl.member.fullName = $ctrl.member.firstName + ' ' + $ctrl.member.lastName;
-            $ctrl.member.emails = [$ctrl.member.email];
-
-            return loader.wrapLoading(function () {
-                return corporateAccountApi.updateCompanyMember($ctrl.member, function(response) {
-                    corporateApiErrorHelper.clearErrors($scope);
-                }, function (rejection){
-                    corporateApiErrorHelper.handleErrors($scope, rejection);
-                }).$promise;
-            });
+            // no validation
+            $ctrl.accountManager.updateProfile($ctrl.changeData);
         };
     }]
 });
@@ -1924,117 +1755,6 @@ angular.module('storefront.account')
     }]
 });
 
-var storefrontApp = angular.module('storefrontApp');
-
-storefrontApp.controller('accountRegisterController', ['$q', '$scope', 'storefrontApp.mainContext', 'storefront.corporateRegisterApi', 'storefront.corporateApiErrorHelper', 'loadingIndicatorService',
-    function ($q, $scope, mainContext, corporateRegisterApi, corporateApiErrorHelper, loader) {
-
-    $scope.loader = loader;
-    $scope.memberComponent = null;
-    $scope.newMember = null;
-
-    $scope.registerMemberFieldsConfig = [
-        {
-            field: 'CompanyName',
-            disabled: false,
-            visible: true,
-            required: true
-        },
-        {
-            field: 'Email',
-            disabled: false,
-            visible: true,
-            required: true
-        },
-        {
-            field: 'UserName',
-            disabled: false,
-            visible: true,
-            required: true
-        },
-        {
-            field: 'Password',
-            disabled: false,
-            visible:  true,
-            required: true
-        }
-    ];
-
-    function getParams() {
-        var params = window.location.search.substring(1).split("&"), result = {}, param, i;
-        for (i in params) {
-            if (params.hasOwnProperty(i)) {
-                if (params[i] === "") continue;
-
-                param = params[i].split("=");
-                result[decodeURIComponent(param[0])] = decodeURIComponent(param[1]);
-            }
-        }
-        return result;
-    }
-
-    $scope.init = function (storeId) {
-        $scope.newMember = {};
-        $scope.newMember.storeId = storeId;
-
-        $scope.complete = false;
-
-        var invite = getParams().invite;
-        if (invite) {
-            $scope.registerMemberFieldsConfig[0] = {
-                field: 'CompanyName',
-                disabled: true,
-                visible: true,
-                required: true
-            };
-            $scope.registerMemberFieldsConfig[1] = {
-                field: 'Email',
-                disabled: true,
-                visible: true,
-                required: true
-            };
-
-            $scope.newMember.invite = invite;
-            $scope.loader.wrapLoading(function() {
-                return corporateRegisterApi.getRegisterInfoByInvite({ invite: invite }).$promise
-                    .then(function(result) {
-                        if (result.message) {
-                            $scope.error = result.message;
-                            return $q.reject("Invite is invalid");
-                        }
-                        $scope.newMember.companyName = result.companyName;
-                        $scope.newMember.email = result.email;
-                    });
-            });
-        }
-    };
-
-    $scope.register = function () {
-        $scope.error = null;
-
-        if (this.memberComponent.validate()) {
-            if ($scope.newMember.invite) {
-                $scope.loader.wrapLoading(function () {
-                    return corporateRegisterApi.registerByInvite({ invite: $scope.newMember.invite }, $scope.newMember, function (result) {
-                        $scope.complete = true;
-                        corporateApiErrorHelper.clearErrors($scope);
-                    }, function (rejection){
-                        corporateApiErrorHelper.handleErrors($scope, rejection);
-                    }).$promise;
-                });
-            } else {
-                $scope.loader.wrapLoading(function() {
-                    return corporateRegisterApi.register($scope.newMember, function (result) {
-                        $scope.complete = true;
-                        corporateApiErrorHelper.clearErrors($scope);
-                    }, function (rejection){
-                        corporateApiErrorHelper.handleErrors($scope, rejection);
-                    }).$promise;
-                });
-            }
-        }
-    };
-}]);
 angular.module('storefront.account')
 .component('vcAccountSubscriptions', {
     templateUrl: "themes/assets/js/account/account-subscriptions.tpl.liquid",
@@ -2130,161 +1850,75 @@ angular.module('storefront.account')
 })
 ;
 angular.module('storefront.account')
-    .component('vcAccountWholesalers', {
-        templateUrl: "themes/assets/account-wholesalers.tpl.liquid",
-        $routeConfig: [
-            { path: '/', name: 'WholesalersList', component: 'vcAccountWholesalersList', useAsDefault: true },
-            { path: '/:wholesaler', name: 'WholesalerDetail', component: 'vcAccountWholesalerDetail' }
-        ],
-        controller: ['storefront.wholesalersApi', function (accountApi) {
-            var $ctrl = this;
-        }]
-    })
+.component('vcAccountWholesalers', {
+    templateUrl: "themes/assets/account-wholesalers.tpl.liquid",
+    $routeConfig: [
+        { path: '/', name: 'WholesalersList', component: 'vcAccountWholesalersList', useAsDefault: true }
+    ],
+    controller: ['storefront.wholesalersApi', function (accountApi) {
+        var $ctrl = this;
+    }]
+})
 
-    .component('vcAccountWholesalersList', {
-        templateUrl: "account-wholesalers.tpl",
-        bindings: { $router: '<' },
-        controller: ['storefrontApp.mainContext', '$scope', 'storefront.wholesalersApi', 'storefront.corporateApiErrorHelper', 'loadingIndicatorService', 'confirmService', '$location', '$translate', function (mainContext, $scope, wholesalersApi, corporateApiErrorHelper, loader, confirmService, $location, $translate) {
-            var $ctrl = this;        
-            $ctrl.loader = loader;
-            $ctrl.pageSettings = { currentPage: 1, itemsPerPageCount: 5, numPages: 10 };
-            $ctrl.pageSettings.pageChanged = function () {
-                loader.wrapLoading(function () {
-                    return wholesalersApi.getWholesalersList(function (data) {
-                        $ctrl.entries = data;
-                        $ctrl.pageSettings.totalItems = data.length;                      
-                    }).$promise;
-                });
-            };
+.component('vcAccountWholesalersList', {
+    templateUrl: "account-wholesalers.tpl",
+    bindings: { $router: '<' },
+    controller: ['storefrontApp.mainContext', '$scope', 'storefront.wholesalersApi', 'loadingIndicatorService', 'confirmService', '$location', '$translate', function (mainContext, $scope, wholesalersApi, loader, confirmService, $location, $translate) {
+        var $ctrl = this;        
+        $ctrl.loader = loader;
+        $ctrl.pageSettings = { currentPage: 1, itemsPerPageCount: 5, numPages: 10 };
+        $ctrl.pageSettings.pageChanged = function () {
+            loader.wrapLoading(function () {
+                return wholesalersApi.getWholesalersList(function (data) {
+                    $ctrl.entries = data;
+                    $ctrl.pageSettings.totalItems = data.length;                      
+                }).$promise;
+            });
+        };
 
-            this.$routerOnActivate = function (next) {
-                $ctrl.pageSettings.currentPage = next.params.pageNumber || $ctrl.pageSettings.currentPage;
-            };
+        this.$routerOnActivate = function (next) {
+            $ctrl.pageSettings.currentPage = next.params.pageNumber || $ctrl.pageSettings.currentPage;
+        };
 
-            $scope.$watch(
-                function () { return mainContext.customer; },
-                function (customer) {                 
-                        $ctrl.pageSettings.pageChanged();                    
-                }
-            );
+        $scope.$watch(
+            function () { return mainContext.customer; },
+            function (customer) {                 
+                    $ctrl.pageSettings.pageChanged();                    
+            }
+        );
                     
 
-            $ctrl.sendAgreement = function (wholesaler) {
-                loader.wrapLoading(function () {
-                    return wholesalersApi.sentDeliveryAgreementRequest(wholesaler.agreementRequest, function (data) {
-                        $ctrl.pageSettings.pageChanged();
-                    }).$promise;
-                });
-            };
+        $ctrl.sendAgreement = function (wholesaler) {
+            loader.wrapLoading(function () {
+                return wholesalersApi.sentDeliveryAgreementRequest(wholesaler.agreementRequest, function (data) {
+                    $ctrl.pageSettings.pageChanged();
+                }).$promise;
+            });
+        };
 
-            $ctrl.confirmAgreement = function (agreement) {
-                loader.wrapLoading(function () {
-                    return wholesalersApi.confirmDeliveryAgreementRequest({ id: agreement.id }, {}, function (data) {
-                        $ctrl.pageSettings.pageChanged();
-                    }).$promise;
-                });
-            };
+        $ctrl.confirmAgreement = function (agreement) {
+            loader.wrapLoading(function () {
+                return wholesalersApi.confirmDeliveryAgreementRequest({ id: agreement.id }, {}, function (data) {
+                    $ctrl.pageSettings.pageChanged();
+                }).$promise;
+            });
+        };
 
-            $ctrl.selectWholesaler = function (wholesaler) {
-                loader.wrapLoading(function () {
-                    return wholesalersApi.selectWholesaler({ id: wholesaler.id }, {}, function (data) {
-                        $ctrl.pageSettings.pageChanged();
-                    }).$promise;
-                });
-            };
+        $ctrl.selectWholesaler = function (wholesaler) {
+            loader.wrapLoading(function () {
+                return wholesalersApi.selectWholesaler({ id: wholesaler.id }, {}, function (data) {
+                    $ctrl.pageSettings.pageChanged();
+                }).$promise;
+            });
+        };
             
-            $ctrl.validate = function () {
-                $ctrl.inviteForm.$setSubmitted();
-                return $ctrl.inviteForm.valid;
-            };
+        $ctrl.validate = function () {
+            $ctrl.inviteForm.$setSubmitted();
+            return $ctrl.inviteForm.valid;
+        };
 
-        }]
-    })
-    .component('vcAccountWholesalerDetail', {
-        templateUrl: "account-company-members-detail.tpl",
-        require: {
-            accountManager: '^vcAccountManager'
-        },
-        controller: ['$q', '$rootScope', '$scope', '$window', 'storefront.corporateAccountApi', 'storefront.corporateApiErrorHelper', 'loadingIndicatorService', 'confirmService', function ($q, $rootScope, $scope, $window,  corporateAccountApi, corporateApiErrorHelper, loader, confirmService) {
-            var $ctrl = this;
-            $ctrl.loader = loader;
-            $ctrl.fieldsConfig = [
-                {
-                    field: 'CompanyName',
-                    disabled: true,
-                    visible: false,
-                    required: false
-                },
-                {
-                    field: 'Email',
-                    disabled: false,
-                    visible: true,
-                    required: true
-                },
-                {
-                    field: 'UserName',
-                    disabled: true,
-                    visible: false
-                },
-                {
-                    field: 'Password',
-                    disabled: true,
-                    visible: false
-                },
-                {
-                    field: 'Roles',
-                    disabled: false,
-                    visible: true
-                }
-            ];
-
-            $ctrl.memberComponent = null;
-
-            $scope.init = function (storeId) {
-                $ctrl.storeId = storeId;
-            };
-
-            function refresh() {
-                loader.wrapLoading(function () {
-                    return corporateAccountApi.getCompanyMember({ id: $ctrl.memberNumber }, function (member) {
-                        $ctrl.member = {
-                            id: member.id,
-                            firstName: member.firstName,
-                            lastName: member.lastName,
-                            email: _.first(member.emails),
-                            organizations: member.organizations,
-                            title: member.title,
-                            securityAccounts: member.securityAccounts
-                        };
-                    }).$promise;
-                });
-            }
-
-            this.$routerOnActivate = function (next) {
-                $ctrl.pageNumber = next.params.pageNumber || 1;
-                $ctrl.memberNumber = next.params.member;
-
-                refresh();
-            };
-
-            $ctrl.submitMember = function () {
-                if ($ctrl.memberComponent.validate()) {
-                    loader.wrapLoading(function () {
-                        $ctrl.member.fullName = $ctrl.member.firstName + ' ' + $ctrl.member.lastName;
-                        $ctrl.member.emails = [$ctrl.member.email];
-                        return $q.all([
-                            roleService.set($ctrl.member.securityAccounts, $ctrl.member.role),
-                            corporateAccountApi.updateCompanyMember($ctrl.member, function (response) {
-                                corporateApiErrorHelper.clearErrors($scope);
-                            }, function (rejection) {
-                                corporateApiErrorHelper.handleErrors($scope, rejection);
-                            }).$promise
-                        ]);
-                    });
-                };
-            };
-        }]
-    });
+    }]
+});
 
 angular.module('storefront.account')
     .factory('storefront.accountApi', ['$resource', function ($resource) {
@@ -2312,52 +1946,13 @@ angular.module('storefront.account')
             cancel: { url: 'storefrontapi/subscriptions/:number/cancel', method: 'POST' }
         });
     }]);
+
 angular.module('storefront.account')
-    .factory('storefront.wholesalersApi', ['$resource', 'apiBaseUrl', function ($resource, apiBaseUrl) {
-        return $resource(apiBaseUrl + 'api/', {}, {
-            getWholesalersList: { url: 'storefrontapi/wholesalers', isArray: true },
-            sentDeliveryAgreementRequest: { url: 'storefrontapi/wholesalers/agreement/send', method: 'POST' },
-            selectWholesaler: { url: 'storefrontapi/wholesalers/:id/select' },
-            confirmDeliveryAgreementRequest: { url: 'wholesalers/agreements/:id/confirm'}
-        });
-    }])
-.factory('storefront.corporateAccountApi', ['$resource', 'apiBaseUrl', function ($resource, apiBaseUrl) {
-    return $resource(apiBaseUrl + 'api/b2b/companyMembers', {}, {
-        getCompanyById: { url: apiBaseUrl + 'api/b2b/company/:id' },
-        updateCompany: { url: apiBaseUrl + 'api/b2b/company', method: 'POST' },
-
-        getCompanyMembers: { url: apiBaseUrl + 'api/b2b/companyMembers', method: 'POST' },
-        getCompanyMember: { url: apiBaseUrl + 'api/b2b/companyMember/:id' },
-        updateCompanyMember: { url: apiBaseUrl + 'api/b2b/companyMember', method: 'POST' },
-        deleteCompanyMember: { url: apiBaseUrl + 'api/b2b/companyMembers', method: 'DELETE' },
-
-        invite: { url: apiBaseUrl + 'api/b2b/invite', method: 'POST' },
-
-        getUser: { url: apiBaseUrl + 'api/b2b/users/:userName' },
-        updateUser: { url: apiBaseUrl + 'api/b2b/users', method: 'PUT' },
-        getRoles: { url: apiBaseUrl + 'api/b2b/roles', isArray: true }
+.factory('storefront.wholesalersApi', ['$resource', function ($resource) {
+    return $resource('storefrontapi/wholesalers', {}, {
+        getWholesalersList: { url: 'storefrontapi/wholesalers', isArray: true },
+        sentDeliveryAgreementRequest: { url: 'storefrontapi/wholesalers/agreement/send', method: 'POST' },
+        selectWholesaler: { url: 'storefrontapi/wholesalers/:id/select' },
+        confirmDeliveryAgreementRequest: { url: 'wholesalers/agreements/:id/confirm'}
     });
-}])
-.factory('storefront.corporateRegisterApi', ['$resource', 'apiBaseUrl', function ($resource, apiBaseUrl) {
-    return $resource(apiBaseUrl + 'api/b2b/register', {}, {
-        register: { url: apiBaseUrl + 'api/b2b/register', method: 'POST' },
-        registerMember: { url: apiBaseUrl + 'api/b2b/registerMember', method: 'POST' },
-        getRegisterInfoByInvite: { url: apiBaseUrl + 'api/b2b/registerMember/:invite' },
-        registerByInvite: { url: apiBaseUrl + 'api/b2b/registerMember/:invite', method: 'POST' }
-    });
-}])
-.factory('storefront.corporateApiErrorHelper', ['$rootScope', function ($rootScope) {
-    return {
-        clearErrors: function($scope) {
-            $scope.errorMessage = null;
-            $scope.errors = null;
-        },
-        handleErrors: function ($scope, rejection) {
-            if (rejection.status == 400) {
-                $scope.errorMessage = rejection.data.message;
-                $scope.errors = rejection.data.modelState;
-                $rootScope.closeNotification();
-            }
-        }
-    };
 }]);

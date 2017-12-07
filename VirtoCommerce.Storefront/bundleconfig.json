@@ -39,15 +39,14 @@
             "wwwroot/cms-content/Themes/Vimpex/default/assets/js/directives.js",
             "wwwroot/cms-content/Themes/Vimpex/default/assets/js/filters.js",
             "wwwroot/cms-content/Themes/Vimpex/default/assets/js/main.js",
-            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/common-components/(!roles).js",
-            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/checkout/*.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/common-components/*.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/checkout/*.js"
         ]
     },
     {
         "outputFileName": "wwwroot/cms-content/Themes/Vimpex/default/assets/static/bundle/account-scripts.js",
         "inputFiles": [
             "wwwroot/cms-content/Themes/Vimpex/default/assets/modernizr.min.js",
-            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/errors.js",
             "wwwroot/cms-content/Themes/Vimpex/default/assets/js/services.js",
             "wwwroot/cms-content/Themes/Vimpex/default/assets/js/main.js",
             "wwwroot/cms-content/Themes/Vimpex/default/assets/js/cart.js",
@@ -55,7 +54,7 @@
             "wwwroot/cms-content/Themes/Vimpex/default/assets/js/product-compare.js",
             "wwwroot/cms-content/Themes/Vimpex/default/assets/js/searchBar.js",
             "wwwroot/cms-content/Themes/Vimpex/default/assets/js/common-components/*.js",
-            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/account/*.js",
+            "wwwroot/cms-content/Themes/Vimpex/default/assets/js/account/*.js"
         ],
         "sourceMap": true
     },

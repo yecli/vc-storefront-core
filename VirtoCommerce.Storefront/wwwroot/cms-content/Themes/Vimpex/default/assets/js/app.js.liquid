@@ -6,8 +6,6 @@
 ]
 var storefrontApp = angular.module('storefrontApp', storefrontAppDependencies);
 
-storefrontApp.constant('apiBaseUrl', '{{ application_settings['VirtoCommerce:B2B:ApiEndpoint'] }}');
-
 storefrontApp.factory('httpErrorInterceptor', ['$q', '$rootScope', function ($q, $rootScope) {
     var httpErrorInterceptor = {};
 
