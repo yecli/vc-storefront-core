@@ -183,9 +183,10 @@
         $(function () {
             var dashboard = $('#dashboard');
             var toggleDashboardBtn = $('#toggleDashboard');
+            var dashboardLinks = $('#dashboard a');
             var main = $('main');
             if (dashboard.length) {
-                toggleDashboardBtn.on('click', function () {
+                var toggleDashboard = function () {
                     toggleDashboardBtn.toggleClass('is-active');
                     dashboard.slideToggle(200);
 
@@ -195,7 +196,9 @@
                             scrollTop: main.offset().top
                         });
                     }
-                });
+                };
+                toggleDashboardBtn.on('click', toggleDashboard);
+                dashboardLinks.on('click', toggleDashboard);
             }
         });
     </script>

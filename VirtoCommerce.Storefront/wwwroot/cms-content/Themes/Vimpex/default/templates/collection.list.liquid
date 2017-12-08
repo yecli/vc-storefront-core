@@ -1,4 +1,4 @@
-{% paginate collection.products by 20 %}
+﻿{% paginate collection.products by 20 %}
 
 {% include 'breadcrumb' %}
 
@@ -23,7 +23,9 @@
 
         {% include 'collection-sorting' %}
         {% include 'collection-views' %}
-        {% include 'toggle-filters' %}
+        {% if has_sidebar %}
+          {% include 'toggle-filters' %}
+        {% endif %}
 
       </div>
     </header>

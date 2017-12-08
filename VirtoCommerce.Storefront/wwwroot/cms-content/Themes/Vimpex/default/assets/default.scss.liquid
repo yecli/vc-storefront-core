@@ -16,6 +16,7 @@
   #Grid Setup
   #Basic Styles
   #Helper Classes
+  #Helper Classes
   #Typography
   #Rich Text Editor
   #Links and Buttons
@@ -860,6 +861,11 @@ body {
   padding-bottom: $gutter*2;
   position: relative;
   z-index: 9999;
+
+  @include at-query ($max, $large) {
+    padding-top: $gutter/2;
+    padding-bottom: $gutter/2;
+  }
 }
 
 .ajax-informer
@@ -868,18 +874,15 @@ body {
   background: #fffabf;
   border: 1px solid #fff57c;
   color: #666;
-  display: flex;
   font-size: 11px;
   font-weight: bold;
   margin: 0 auto;
   max-width: 360px;
   min-height: 30px;
   left: 50%;
-  opacity: 0;
+  display: none;
   padding: 5px 10px;
   top: 0;
-
-  filter: alpha(opacity=0);
 
   @include box-sizing();
   @include transition(opacity .3s ease);
@@ -887,9 +890,7 @@ body {
 
 .ajax-informer.fade
 {
-  opacity: 1;
-  
-  filter: alpha(opacity=100);
+  display: flex;
 }
 
 .ajax-informer.error
@@ -908,7 +909,7 @@ body {
 
 .grid-border {
   & > .grid-item {
-    padding-top: $gutter;
+    padding-top: $gutter/2;
   }
 
   // @include at-query ($min, $large) {
@@ -1423,6 +1424,11 @@ th, td {
   text-align: left;
   padding: $gutter/2;
   border: 1px solid $colorBorder;
+
+  @include at-query ($max, $medium) {
+    font-size: 13px;
+    padding: $gutter/6;
+  }
 }
 
 
@@ -2232,7 +2238,7 @@ $shareBorderColor: #ececec;
 }
 
 .header-logo {
-  margin: $gutter auto;
+  margin: 0 auto;
   max-width: {{ settings.logo_max_width }}px;
 
   @include at-query ($min, $large) {
@@ -2493,7 +2499,6 @@ $shareBorderColor: #ececec;
 
     .show-nav & {
       max-height: 100%;
-      overflow-y: scroll;
       -webkit-overflow-scrolling: touch;
       @include transition(all 450ms cubic-bezier(0.47, 0, 0, 0.95));
     }
@@ -2875,6 +2880,16 @@ a.product-grid-item,
     @include transition(opacity 0.05s ease-out);
   }
 
+  + .btn {
+    margin-top: -$gutter * 0.5;
+    margin-bottom: $gutter;
+
+    @include at-query($max, $medium) {
+      margin-top: -$gutter * 1.5;
+      margin-bottom: $gutter;
+    }
+  }
+
   @include at-query ($min, $large) {
     margin-bottom: $gutter;
 
@@ -2901,6 +2916,10 @@ a.product-grid-item,
     margin: 5px 0 0;
     text-transform: capitalize;
     width: 100%;
+}
+
+.wholesaler-item {
+  margin-bottom: $gutter/2;
 }
 
 .wholesaler-tag,
@@ -3042,7 +3061,10 @@ $innerFilterIconWidth: 6px;
 }
 
 .advanced-filters {
-  margin-bottom: $gutter;
+  margin-bottom: $gutter / 2;
+  @include at-query($max, $medium) {
+    margin-bottom: 0;
+  }
 }
 
 .advanced-filters a {
@@ -3123,6 +3145,12 @@ $innerFilterIconWidth: 6px;
 
   @include at-query ($max, $medium) {
     height: auto;
+    margin-top: -$gutter / 2;
+
+    a,
+    span {
+      padding: $gutter/6 7px $gutter/6 0;
+    }
   }
 
   a {
@@ -3136,9 +3164,12 @@ $innerFilterIconWidth: 6px;
   a,
   span {
     display: inline-block;
-    padding: $gutter/2 7px $gutter/2 0;
     margin-right: 7px;
     overflow: hidden;
+
+    @include at-query ($min, $large) {
+      padding: $gutter/2 7px $gutter/2 0;
+    }
 
     &:first-child {
       padding-left: 0;
@@ -3147,7 +3178,6 @@ $innerFilterIconWidth: 6px;
   .divider {
     font-size: 15px;
     font-family: 'Verdana', sans-serif;
-    padding: 13px 7px 13px 0;
     color: #bbb;
   }
 

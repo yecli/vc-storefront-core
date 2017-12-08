@@ -1,4 +1,4 @@
-{% paginate collection.products by 20 %}
+﻿{% paginate collection.products by 20 %}
 {% include 'breadcrumb' %}
 
 {% assign has_sidebar = false %}
@@ -9,7 +9,7 @@
 <div class="grid grid-border" ng-controller="productListController">
 
   {% if has_sidebar %}
-  <aside class="sidebar grid-item large--one-fifth collection-filters" id="collectionFilters">
+  <aside class="sidebar grid-item small--one-whole medium--one-whole large--one-fifth collection-filters" id="collectionFilters">
     {% include 'collection-sidebar' %}
   </aside>
   {% endif %}
@@ -31,7 +31,9 @@
         <div class="section-header--right">
           {% include 'collection-sorting' %}
           {% include 'collection-views' %}
-          {% include 'toggle-filters' %}
+          {% if has_sidebar %}
+            {% include 'toggle-filters' %}
+          {% endif %}
         </div>
       </div>
     {% else %}
@@ -40,7 +42,9 @@
       <div class="section-header--right">
         {% include 'collection-sorting' %}
         {% include 'collection-views' %}
-        {% include 'toggle-filters' %}
+        {% if has_sidebar %}
+          {% include 'toggle-filters' %}
+        {% endif %}
       </div>
     </header>
     {% endif %}
@@ -49,9 +53,9 @@
       {% for product in collection.products %}
         
         {% if has_sidebar %}
-          {% assign grid_item_width = 'large--one-quarter medium--one-third small--one-half' %}
+          {% assign grid_item_width = 'large--one-quarter medium--one-third small--one-whole' %}
         {% else %}
-          {% assign grid_item_width = 'large--one-fifth medium--one-third small--one-half' %}
+          {% assign grid_item_width = 'large--one-fifth medium--one-third small--one-whole' %}
         {% endif %}
         {% include 'product-grid-item', product: product %}
 

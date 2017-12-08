@@ -1,4 +1,4 @@
-{%- if settings.collection_sidebar_filters == 'facets' -%}
+﻿{%- if settings.collection_sidebar_filters == 'facets' -%}
   {%- if collection.all_tags.size > 0 -%}
     <div class="grid-uniform">
       {%- comment -%}
@@ -9,7 +9,7 @@
           Ignore if tag category is empty
         {%- endcomment -%}
         {%- unless cat_item == '' -%}
-        <div class="grid-item small--one-half medium--one-third">
+        <div class="grid-item small--one-whole medium--one-whole">
           {%- capture group_label %}{% if cat_item == 'price' %}{{ 'tags.price.label' | t }}{% else %}{{ cat_item }}{% endif %}{%- endcapture -%}
           <h3>{{ group_label | escape }}</h3>
           <ul class="advanced-filters">
