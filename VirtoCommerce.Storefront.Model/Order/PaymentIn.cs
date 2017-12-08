@@ -7,7 +7,7 @@ namespace VirtoCommerce.Storefront.Model.Order
     /// <summary>
     /// Represent incoming payment operation
     /// </summary>
-    public partial class PaymentIn
+    public partial class PaymentIn : Entity
     {
         public PaymentIn(Currency currency)
         {
@@ -176,11 +176,6 @@ namespace VirtoCommerce.Storefront.Model.Order
         /// Gets or Sets ModifiedBy
         /// </summary>
         public string ModifiedBy { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Id
-        /// </summary>
-        public string Id { get; set; }
 
         public BankCardInfo BankCardInfo { get; set; }
 

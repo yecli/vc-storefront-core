@@ -8,7 +8,7 @@ namespace VirtoCommerce.Storefront.Model.Order
     /// <summary>
     /// Represents order shipment
     /// </summary>
-    public partial class Shipment
+    public partial class Shipment : Entity
     {
         public Shipment(Currency currency)
         {
@@ -232,11 +232,6 @@ namespace VirtoCommerce.Storefront.Model.Order
         /// Gets or Sets ModifiedBy
         /// </summary>
         public string ModifiedBy { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Id
-        /// </summary>
-        public string Id { get; set; }
 
         public string TaxType { get; set; }
         public Money TaxTotal { get; set; }

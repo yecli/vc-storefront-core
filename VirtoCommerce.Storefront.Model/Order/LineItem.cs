@@ -8,7 +8,7 @@ namespace VirtoCommerce.Storefront.Model.Order
     /// <summary>
     /// Represents order line item
     /// </summary>
-    public partial class LineItem
+    public partial class LineItem : Entity
     {
         public LineItem(Currency currency)
         {
@@ -181,11 +181,6 @@ namespace VirtoCommerce.Storefront.Model.Order
         /// Gets or Sets ModifiedBy
         /// </summary>
         public string ModifiedBy { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Id
-        /// </summary>
-        public string Id { get; set; }
 
 
         public Money ListPrice { get; set; }

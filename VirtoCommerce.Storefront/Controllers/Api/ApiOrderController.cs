@@ -10,6 +10,8 @@ using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Common.Exceptions;
 using VirtoCommerce.Storefront.Model.Order;
 using orderModel = VirtoCommerce.Storefront.AutoRestClients.OrdersModuleApi.Models;
+using VirtoCommerce.Storefront.Model.Common.Events;
+using VirtoCommerce.Storefront.Model.Order.Events;
 
 namespace VirtoCommerce.Storefront.Controllers.Api
 {
@@ -17,12 +19,14 @@ namespace VirtoCommerce.Storefront.Controllers.Api
     {
         private readonly IOrderModule _orderApi;
         private readonly IStoreModule _storeApi;
+        private readonly IEventPublisher _publisher;
 
-        public ApiOrderController(IWorkContextAccessor workContextAccessor, IStorefrontUrlBuilder urlBuilder, IOrderModule orderApi, IStoreModule storeApi)
+        public ApiOrderController(IWorkContextAccessor workContextAccessor, IStorefrontUrlBuilder urlBuilder, IOrderModule orderApi, IStoreModule storeApi, IEventPublisher publisher)
             : base(workContextAccessor, urlBuilder)
         {
             _orderApi = orderApi;
             _storeApi = storeApi;
+            _publisher = publisher;
         }
 
         // POST: storefrontapi/orders/search
@@ -160,6 +164,64 @@ namespace VirtoCommerce.Storefront.Controllers.Api
             var stream = await _orderApi.GetInvoicePdfAsync(orderNumber);
 
             return File(stream, "application/pdf");
+        }
+
+
+        // GET storefrontapi/orders/{orderNumber}/repeat
+        [HttpGet]
+        public async Task<ActionResult> RepeatOrder(string orderNumber)
+        {
+            var order = await _orderApi.GetByNumberAsync(orderNumber);
+            order.Id = null;
+            order.Number = null;
+            order.ModifiedBy = null;
+            order.CreatedDate = null;
+            order.CreatedBy = null;
+            order.ModifiedDate = null;
+            foreach (var shipment in order.Shipments)
+            {
+                shipment.Id = null;
+
+                shipment.ModifiedBy = null;
+                shipment.CreatedDate = null;
+                shipment.CreatedBy = null;
+                shipment.ModifiedDate = null;
+                shipment.Number = null;
+                foreach (var discount in shipment.Discounts)
+                {
+                    discount.Id = null;
+                }
+            }
+            foreach (var payment in order.InPayments)
+            {
+                payment.Id = null;
+
+                payment.ModifiedBy = null;
+                payment.CreatedDate = null;
+                payment.CreatedBy = null;
+                payment.ModifiedDate = null;
+                payment.Number = null;
+                foreach (var discount in payment.Discounts)
+                {
+                    discount.Id = null;
+                }
+            }
+            foreach (var lineItem in order.Items)
+            {
+                lineItem.Id = null;
+
+                lineItem.ModifiedBy = null;
+                lineItem.CreatedDate = null;
+                lineItem.CreatedBy = null;
+                lineItem.ModifiedDate = null;
+                foreach (var discount in lineItem.Discounts)
+                {
+                    discount.Id = null;
+                }
+            }
+            order = await _orderApi.CreateOrderAsync(order);
+            await _publisher.Publish(new OrderPlacedEvent(WorkContext, order.ToCustomerOrder(WorkContext.AllCurrencies, WorkContext.CurrentLanguage), null));
+            return StoreFrontRedirect($"~/cart/thanks/{order.Number}");
         }
 
         private async Task<CustomerOrder> GetOrderByNumber(string number)
