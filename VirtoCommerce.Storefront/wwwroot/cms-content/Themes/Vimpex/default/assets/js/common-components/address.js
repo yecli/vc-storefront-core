@@ -90,7 +90,7 @@ storefrontApp.component('vcAddress', {
             stringifiedAddress += address.regionName ? address.regionName + ', ' : '';
             stringifiedAddress += address.city + ' ';
             stringifiedAddress += address.line1 + ', ';
-            stringifiedAddress += address.line2 ? address.line2 : '';
+            stringifiedAddress += address.line2 ? address.line2 + ', ' : '';
             stringifiedAddress += address.postalCode;
             return stringifiedAddress;
         }

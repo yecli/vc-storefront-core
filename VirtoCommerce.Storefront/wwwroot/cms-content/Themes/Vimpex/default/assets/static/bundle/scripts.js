@@ -627,7 +627,7 @@ storefrontApp.controller('mainController', ['$rootScope', '$scope', '$location',
             stringifiedAddress += address.regionName ? address.regionName + ', ' : '';
             stringifiedAddress += address.city + ' ';
             stringifiedAddress += address.line1 + ', ';
-            stringifiedAddress += address.line2 ? address.line2 : '';
+            stringifiedAddress += address.line2 ? address.line2 + ', '  : '';
             stringifiedAddress += address.postalCode;
             return stringifiedAddress;
         }
@@ -660,6 +660,7 @@ storefrontApp.controller('mainController', ['$rootScope', '$scope', '$location',
 .factory('storefrontApp.mainContext', function () {
     return {};
 });
+
 var storefrontApp = angular.module('storefrontApp');
 storefrontApp.controller('orderController', ['$scope', '$window', 'orderService', function ($scope, $window, orderService) {
     getOrder($window.orderNumber);
@@ -1520,6 +1521,9 @@ storefrontApp.service('orderService', ['$http', function ($http) {
     return {
         getOrder: function (orderNumber) {
             return $http.get('storefrontapi/orders/' + orderNumber + '?t=' + new Date().getTime());
+        },
+        repeatOrder: function(orderNumber) {
+            return $http.get('storefrontapi/orders/' + orderNumber + '/repeat');
         }
     }
 }]);

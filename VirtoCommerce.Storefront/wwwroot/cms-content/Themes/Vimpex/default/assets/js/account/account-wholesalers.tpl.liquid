@@ -34,7 +34,7 @@
                     </div>
                     <div class="grid-item">
                         <a class="vc-btn secondary" ng-if="wholesaler.agreementRequest.status == 'NotSent'" ng-click="$ctrl.sendAgreement(wholesaler)" href="">Send agreement</a>
-                        <a class="vc-btn secondary" ng-if="!wholesaler.isActive && wholesaler.agreementRequest.status == 'Confirmed'" ng-click="$ctrl.selectWholesaler(wholesaler)" href="">Set current</a>
+                        <a class="vc-btn" ng-class="{'secondary': ($ctrl.entries | some: 'isActive')}" ng-if="!wholesaler.isActive && wholesaler.agreementRequest.status == 'Confirmed'" ng-click="$ctrl.selectWholesaler(wholesaler)" href="">Set current</a>
                         <a class="vc-btn secondary" ng-if="wholesaler.agreementRequest.status == 'Sent'" ng-click="$ctrl.confirmAgreement(wholesaler.agreementRequest)" href="">Confirm (only for test)</a>
                         <a class="vc-btn" ng-if="wholesaler.isActive" ng-href="{% raw %}{{ wholesaler.url }}{% endraw %}">Go to store</a>
                     </div>

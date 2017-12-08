@@ -185,6 +185,9 @@ storefrontApp.service('orderService', ['$http', function ($http) {
     return {
         getOrder: function (orderNumber) {
             return $http.get('storefrontapi/orders/' + orderNumber + '?t=' + new Date().getTime());
+        },
+        repeatOrder: function(orderNumber) {
+            return $http.get('storefrontapi/orders/' + orderNumber + '/repeat');
         }
     }
 }]);

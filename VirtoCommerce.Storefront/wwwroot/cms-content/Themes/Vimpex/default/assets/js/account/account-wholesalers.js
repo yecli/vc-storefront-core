@@ -1,4 +1,4 @@
-angular.module('storefront.account')
+﻿angular.module('storefront.account')
 .component('vcAccountWholesalers', {
     templateUrl: "themes/assets/account-wholesalers.tpl.liquid",
     $routeConfig: [
@@ -12,7 +12,7 @@ angular.module('storefront.account')
 .component('vcAccountWholesalersList', {
     templateUrl: "account-wholesalers.tpl",
     bindings: { $router: '<' },
-    controller: ['storefrontApp.mainContext', '$scope', 'storefront.wholesalersApi', 'loadingIndicatorService', 'confirmService', '$location', '$translate', function (mainContext, $scope, wholesalersApi, loader, confirmService, $location, $translate) {
+    controller: ['storefrontApp.mainContext', '$scope', 'storefront.wholesalersApi', 'loadingIndicatorService', 'dialogService', 'confirmService', '$location', '$translate', function (mainContext, $scope, wholesalersApi, loader, dialogService, confirmService, $location, $translate) {
         var $ctrl = this;        
         $ctrl.loader = loader;
         $ctrl.pageSettings = { currentPage: 1, itemsPerPageCount: 5, numPages: 10 };
@@ -43,6 +43,7 @@ angular.module('storefront.account')
                     $ctrl.pageSettings.pageChanged();
                 }).$promise;
             });
+            dialogService.showDialog({ wholesaler: wholesaler }, 'recentlySentWholesalerAgreementDialog', 'storefront.recently-sent-wholesaler-agreement-dialog.tpl');
         };
 
         $ctrl.confirmAgreement = function (agreement) {
@@ -68,3 +69,11 @@ angular.module('storefront.account')
 
     }]
 });
+
+storefrontApp.controller('recentlySentWholesalerAgreementDialog', ['$scope', '$uibModalInstance', 'dialogData', function ($scope, $uibModalInstance, dialogData) {
+    $scope.dialogData = dialogData;
+
+    $scope.close = function () {
+        $uibModalInstance.close();
+    }
+}]);

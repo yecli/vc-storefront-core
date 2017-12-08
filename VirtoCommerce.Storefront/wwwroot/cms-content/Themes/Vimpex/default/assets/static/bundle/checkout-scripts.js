@@ -185,9 +185,13 @@ storefrontApp.service('orderService', ['$http', function ($http) {
     return {
         getOrder: function (orderNumber) {
             return $http.get('storefrontapi/orders/' + orderNumber + '?t=' + new Date().getTime());
+        },
+        repeatOrder: function(orderNumber) {
+            return $http.get('storefrontapi/orders/' + orderNumber + '/repeat');
         }
     }
 }]);
+
 var storefrontApp = angular.module('storefrontApp');
 
 storefrontApp.directive('vcContentPlace', ['marketingService', function (marketingService) {
@@ -278,7 +282,7 @@ storefrontApp.controller('mainController', ['$rootScope', '$scope', '$location',
             stringifiedAddress += address.regionName ? address.regionName + ', ' : '';
             stringifiedAddress += address.city + ' ';
             stringifiedAddress += address.line1 + ', ';
-            stringifiedAddress += address.line2 ? address.line2 : '';
+            stringifiedAddress += address.line2 ? address.line2 + ', '  : '';
             stringifiedAddress += address.postalCode;
             return stringifiedAddress;
         }
@@ -311,6 +315,7 @@ storefrontApp.controller('mainController', ['$rootScope', '$scope', '$location',
 .factory('storefrontApp.mainContext', function () {
     return {};
 });
+
 var storefrontApp = angular.module('storefrontApp');
 storefrontApp.component('vcAddress', {
     templateUrl: "themes/assets/address.tpl.html",
@@ -403,7 +408,7 @@ storefrontApp.component('vcAddress', {
             stringifiedAddress += address.regionName ? address.regionName + ', ' : '';
             stringifiedAddress += address.city + ' ';
             stringifiedAddress += address.line1 + ', ';
-            stringifiedAddress += address.line2 ? address.line2 : '';
+            stringifiedAddress += address.line2 ? address.line2 + ', ' : '';
             stringifiedAddress += address.postalCode;
             return stringifiedAddress;
         }
