@@ -179,10 +179,9 @@ namespace VirtoCommerce.Storefront.Controllers.Api
             {
                 var cartBuilder = await LoadOrCreateCartAsync();
                 string[] productsId = cartItems.Select(x => x.ProductId).Distinct().ToArray();
-
                 int quantity;
-                //quantity?
                 var products = await _catalogService.GetProductsAsync(productsId, Model.Catalog.ItemResponseGroup.Inventory | Model.Catalog.ItemResponseGroup.ItemWithPrices);
+
                 if (products != null && products.Any())
                 {
                     foreach (var product in products)
