@@ -79,7 +79,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
 
         // POST: storefrontapi/cart/items
         [HttpPost]
-        public async Task<ActionResult> AddItemToCart([FromBody] AddCartItem cartItem)
+        public async Task<ActionResult> AddItemToCart([FromBody] AddCartItem[] cartItems)
         {
             EnsureCartExists();
 
@@ -87,11 +87,17 @@ namespace VirtoCommerce.Storefront.Controllers.Api
             using (await AsyncLock.GetLockByKey(GetAsyncLockCartKey(WorkContext.CurrentCart.Value)).LockAsync())
             {
                 var cartBuilder = await LoadOrCreateCartAsync();
+                string[] productsId = cartItems.Select(x => x.ProductId).Distinct().ToArray();
+                int quantity;
+                var products = await _catalogService.GetProductsAsync(productsId, Model.Catalog.ItemResponseGroup.Inventory | Model.Catalog.ItemResponseGroup.ItemWithPrices);
 
-                var products = await _catalogService.GetProductsAsync(new[] { cartItem.ProductId }, Model.Catalog.ItemResponseGroup.Inventory | Model.Catalog.ItemResponseGroup.ItemWithPrices);
                 if (products != null && products.Any())
                 {
-                    await cartBuilder.AddItemAsync(products.First(), cartItem.Quantity);
+                    foreach (var product in products)
+                    {
+                        quantity = cartItems.Where(x => x.ProductId == product.Id).Sum(x => x.Quantity);
+                        await cartBuilder.AddItemAsync(product, quantity);
+                    }
                     await cartBuilder.SaveAsync();
                 }
                 return Json(new { ItemsCount = cartBuilder.Cart.ItemsQuantity });
@@ -131,73 +137,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
 
         // PUT: storefrontapi/cart/items?lineItemId=...&quantity=...
         [HttpPut]
-        public async Task<ActionResult> ChangeCartItem([FromBody] ChangeCartItemQty changeQty)
-        {
-            EnsureCartExists();
-
-            //Need lock to prevent concurrent access to same cart
-            using (await AsyncLock.GetLockByKey(GetAsyncLockCartKey(WorkContext.CurrentCart.Value)).LockAsync())
-            {
-                var cartBuilder = await LoadOrCreateCartAsync();
-
-                var lineItem = cartBuilder.Cart.Items.FirstOrDefault(i => i.Id == changeQty.LineItemId);
-                if (lineItem != null)
-                {
-                    await cartBuilder.ChangeItemQuantityAsync(changeQty.LineItemId, changeQty.Quantity);
-                    await cartBuilder.SaveAsync();
-                }
-            }
-            return Ok();
-        }
-
-        // DELETE: storefrontapi/cart/items?lineItemId=...
-        [HttpDelete]
-        public async Task<ActionResult> RemoveCartItem(string lineItemId)
-        {
-            EnsureCartExists();
-
-            //Need lock to prevent concurrent access to same cart
-            using (await AsyncLock.GetLockByKey(GetAsyncLockCartKey(WorkContext.CurrentCart.Value)).LockAsync())
-            {
-                var cartBuilder = await LoadOrCreateCartAsync();
-                await cartBuilder.RemoveItemAsync(lineItemId);
-                await cartBuilder.SaveAsync();
-                return Json(new { ItemsCount = cartBuilder.Cart.ItemsQuantity });
-            }
-
-        }
-
-
-        // POST: storefrontapi/cart/items
-        [HttpPost]
-        public async Task<ActionResult> AddItemsToCart([FromBody] AddCartItem[] cartItems)
-        {
-            EnsureCartExists();
-
-            //Need lock to prevent concurrent access to same cart
-            using (await AsyncLock.GetLockByKey(GetAsyncLockCartKey(WorkContext.CurrentCart.Value)).LockAsync())
-            {
-                var cartBuilder = await LoadOrCreateCartAsync();
-                string[] productsId = cartItems.Select(x => x.ProductId).Distinct().ToArray();
-                int quantity;
-                var products = await _catalogService.GetProductsAsync(productsId, Model.Catalog.ItemResponseGroup.Inventory | Model.Catalog.ItemResponseGroup.ItemWithPrices);
-
-                if (products != null && products.Any())
-                {
-                    foreach (var product in products)
-                    {
-                        quantity = cartItems.Where(x => x.ProductId == product.Id).Sum(x => x.Quantity);
-                        await cartBuilder.AddItemAsync(product, quantity);
-                    }
-                    await cartBuilder.SaveAsync();
-                }
-                return Json(new { ItemsCount = cartBuilder.Cart.ItemsQuantity });
-            }
-        }
-
-        // PUT: storefrontapi/cart/items?lineItemsIds=...&quantities=...
-        [HttpPut]
-        public async Task<ActionResult> ChangeCartItems([FromBody] ChangeCartItemQty[] changeQuantites)
+        public async Task<ActionResult> ChangeCartItem([FromBody] ChangeCartItemQty[] changeQuantites)
         {
             EnsureCartExists();
 
@@ -212,15 +152,15 @@ namespace VirtoCommerce.Storefront.Controllers.Api
                     {
                         await cartBuilder.ChangeItemQuantityAsync(changeQty.LineItemId, changeQty.Quantity);
                     }
-                    await cartBuilder.SaveAsync();
                 }
+                await cartBuilder.SaveAsync();
             }
             return Ok();
         }
 
-        // DELETE: storefrontapi/cart/items?lineItemsIds=...
+        // DELETE: storefrontapi/cart/items?lineItemId=...
         [HttpDelete]
-        public async Task<ActionResult> RemoveCartItems(string[] lineItemsIds)
+        public async Task<ActionResult> RemoveCartItem(string[] lineItemId)
         {
             EnsureCartExists();
 
@@ -228,9 +168,9 @@ namespace VirtoCommerce.Storefront.Controllers.Api
             using (await AsyncLock.GetLockByKey(GetAsyncLockCartKey(WorkContext.CurrentCart.Value)).LockAsync())
             {
                 var cartBuilder = await LoadOrCreateCartAsync();
-                foreach (var lineItemId in lineItemsIds)
+                foreach (var itemId in lineItemId)
                 {
-                    await cartBuilder.RemoveItemAsync(lineItemId);
+                    await cartBuilder.RemoveItemAsync(itemId);
                 }
                 await cartBuilder.SaveAsync();
                 return Json(new { ItemsCount = cartBuilder.Cart.ItemsQuantity });
