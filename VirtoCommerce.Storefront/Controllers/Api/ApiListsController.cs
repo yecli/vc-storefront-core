@@ -38,20 +38,6 @@ namespace VirtoCommerce.Storefront.Controllers.Api
             }
         }
 
-        // GET: storefrontapi/lists/contains
-        [HttpGet]
-        public async Task<ActionResult> IsItemContainsInList(string productId, string listName)
-        {
-            //Need lock to prevent concurrent access to same cart
-            using (await AsyncLock.GetLockByKey(GetAsyncLockCartKey(WorkContext, listName)).LockAsync())
-            {
-                var wishlistBuilder = await LoadOrCreateWishlistAsync(listName);
-                await wishlistBuilder.ValidateAsync();
-                var hasProduct = wishlistBuilder.Cart.Items.Any(x => x.ProductId == productId);
-                return Json(new { Contains = hasProduct });
-            }
-        }
-
         // POST: storefrontapi/lists/getlistswithproduct
         [HttpPost]
         public async Task<ActionResult> GetListsWithProduct([FromBody] GetListsWithProductRequest request)
