@@ -8,6 +8,7 @@ using VirtoCommerce.Storefront.Infrastructure;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Common.Exceptions;
 using VirtoCommerce.Storefront.Model.Lists;
 using VirtoCommerce.Storefront.Model.Lists.Services;
 using VirtoCommerce.Storefront.Model.Services;
@@ -107,12 +108,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
                 searchCriteria = new WishlistSearchCriteria();
             }
 
-            //restricting query to lists search, only paging and sorting are available
-            searchCriteria.StoreId = WorkContext.CurrentStore.Id;
-            searchCriteria.Customer = WorkContext.CurrentUser;
-            searchCriteria.Currency = WorkContext.CurrentCurrency;
-            searchCriteria.Language = WorkContext.CurrentLanguage;
-
+            searchCriteria = PrepareSearchCriteria(searchCriteria);
             var cartPagedList = await _listService.SearchWishlistsAsync(searchCriteria);
 
             return Json(new
@@ -135,10 +131,11 @@ namespace VirtoCommerce.Storefront.Controllers.Api
                 });
             }
 
-            var list = (await LoadOrCreateWishlistAsync(listName, type)).Cart;
-            if (list.IsTransient())
+            var searchCriteria = PrepareSearchCriteria(new WishlistSearchCriteria() { Name = listName, Type = type });
+            var list = (await _listService.SearchWishlistsAsync(searchCriteria)).FirstOrDefault();
+            if (list == null)
             {
-                list = await _listService.CreateListAsync(list.ToWishlist(WorkContext.CurrentCurrency, WorkContext.CurrentLanguage, WorkContext.CurrentUser));
+                list = await _listService.CreateListAsync(PrepareList(listName, type));
             }
 
             return Json(list);
@@ -156,15 +153,20 @@ namespace VirtoCommerce.Storefront.Controllers.Api
         [HttpPost]
         public async Task<ActionResult> MergeWithCurrentCart(string listName, string type)
         {
-            var currentCartName = WorkContext.CurrentCart.Value?.Name;
-            using (await AsyncLock.GetLockByKey(GetAsyncLockCartKey(WorkContext, currentCartName, string.Empty)).LockAsync())
+            if (WorkContext.CurrentCart.Value == null)
+            {
+                throw new StorefrontException("Cart not found");
+            }
+
+            var cart = WorkContext.CurrentCart.Value;
+            using (await AsyncLock.GetLockByKey(string.Join(":", "Cart", cart.Id, cart.Name, cart.CustomerId)).LockAsync())
             {
                 //load list
                 var wishlistBuilder = await LoadOrCreateWishlistAsync(listName, type);
                 var list = wishlistBuilder.Cart;
 
                 //load or create default cart
-                var cartBuilder = await LoadOrCreateDefaultCartAsync(currentCartName);
+                var cartBuilder = await LoadOrCreateDefaultCartAsync(cart.Name);
                 await cartBuilder.MergeWithCartAsync(list);
 
                 await cartBuilder.SaveAsync();
@@ -187,6 +189,34 @@ namespace VirtoCommerce.Storefront.Controllers.Api
         {
             await _cartBuilder.LoadOrCreateNewTransientCartAsync(currentCartName, WorkContext.CurrentStore, WorkContext.CurrentUser, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
             return _cartBuilder;
+        }
+
+        /// <summary>
+        /// Restricting query to lists search, only paging and sorting are available
+        /// </summary>
+        private WishlistSearchCriteria PrepareSearchCriteria(WishlistSearchCriteria searchCriteria)
+        {
+            searchCriteria.StoreId = WorkContext.CurrentStore.Id;
+            searchCriteria.Customer = WorkContext.CurrentUser;
+            searchCriteria.Currency = WorkContext.CurrentCurrency;
+            searchCriteria.Language = WorkContext.CurrentLanguage;
+            return searchCriteria;
+        }
+
+        private Wishlist PrepareList(string cartName, string type)
+        {
+            var list = new Wishlist(WorkContext.CurrentCurrency, WorkContext.CurrentLanguage)
+            {
+                CustomerId = WorkContext.CurrentUser.Id,
+                Name = cartName,
+                StoreId = WorkContext.CurrentStore.Id,
+                Customer = WorkContext.CurrentUser,
+                Type = type,
+                IsAnonymous = !WorkContext.CurrentUser.IsRegisteredUser,
+                CustomerName = WorkContext.CurrentUser.IsRegisteredUser ? WorkContext.CurrentUser.UserName : StorefrontClaims.AnonymousUsername
+            };
+
+            return list;
         }
     }
 }
