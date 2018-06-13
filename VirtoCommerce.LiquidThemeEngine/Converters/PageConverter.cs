@@ -30,6 +30,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 Layout = contentItem.Layout,
                 MetaInfo = new MetafieldsCollection("meta_fields", new Dictionary<string, object>())
             };
+            if (contentItem is StorefrontModel.JsonPage.JsonContentPage)
+            {
+                result.JsonPage = JsonPageConverter.ToShopifyModel(((StorefrontModel.JsonPage.JsonContentPage)contentItem).JsonPage);
+            }
             foreach (var metaInfoProp in contentItem.MetaInfo)
             {
                 result.MetaInfo.Add(metaInfoProp.Key, metaInfoProp.Value);

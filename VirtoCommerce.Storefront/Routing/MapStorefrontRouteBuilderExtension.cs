@@ -105,6 +105,9 @@ namespace VirtoCommerce.Storefront.Routing
             // Blog API
             routes.MapStorefrontRoute("API.Blog.Search", "storefrontapi/blog/{blogName}/search", defaults: new { controller = "ApiBlog", action = "Search" });
 
+            // JsonPage API
+            routes.MapStorefrontRoute("API.JsonPage.GetBlockHtml", "storefrontapi/jsonPage/getBlockHtml", defaults: new { controller = "ApiJsonPage", action = "GetBlockHtml" });
+
             #endregion
 
             //Errors

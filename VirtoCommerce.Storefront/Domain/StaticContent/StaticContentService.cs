@@ -14,6 +14,10 @@ using VirtoCommerce.Storefront.Model.StaticContent;
 using VirtoCommerce.Storefront.Model.Stores;
 using VirtoCommerce.Tools;
 using YamlDotNet.RepresentationModel;
+using VirtoCommerce.Storefront.Model.JsonPage;
+using Newtonsoft.Json;
+using VirtoCommerce.LiquidThemeEngine.Converters;
+using VirtoCommerce.Storefront.JsonConverters;
 
 namespace VirtoCommerce.Storefront.Domain
 {
@@ -23,7 +27,7 @@ namespace VirtoCommerce.Storefront.Domain
     public class StaticContentService : IStaticContentService
     {
         private static readonly Regex _headerRegExp = new Regex(@"(?s:^---(.*?)---)");
-        private static readonly string[] _extensions = { ".md", ".liquid", ".html" };
+        private static readonly string[] _extensions = { ".md", ".liquid", ".html", ".json" };
         private readonly IStorefrontUrlBuilder _urlBuilder;
         private readonly IStaticContentItemFactory  _contentItemFactory;
         private readonly IContentBlobProvider _contentBlobProvider;
@@ -46,48 +50,58 @@ namespace VirtoCommerce.Storefront.Domain
 
         public IEnumerable<ContentItem> LoadStoreStaticContent(Store store)
         {
+            var gitPath = @"Git/draft";
+
             var baseStoreContentPath = _basePath + "/" + store.Id;
             var cacheKey = CacheKey.With(GetType(), "LoadStoreStaticContent", store.Id);
             return _memoryCache.GetOrCreateExclusive(cacheKey, (cacheEntry) =>
             {
                 cacheEntry.AddExpirationToken(new CompositeChangeToken(new[] { StaticContentCacheRegion.CreateChangeToken(), _contentBlobProvider.Watch(baseStoreContentPath + "/*") }));
 
-                var retVal = new List<ContentItem>();              
+                var retVal = new List<ContentItem>();
                 const string searchPattern = "*.*";
-                if (_contentBlobProvider.PathExists(baseStoreContentPath))
-                {
 
-                    //Search files by requested search pattern
-                    var contentBlobs = _contentBlobProvider.Search(baseStoreContentPath, searchPattern, true)
-                                                 .Where(x => _extensions.Any(x.EndsWith))
-                                                 .Select(x => x.Replace("\\\\", "\\"));
+                ProcessContentPath(baseStoreContentPath, searchPattern, retVal);
 
-                    //each content file  has a name pattern {name}.{language?}.{ext}
-                    var localizedBlobs = contentBlobs.Select(x => new LocalizedBlobInfo(x));
-
-                    foreach (var localizedBlob in localizedBlobs.OrderBy(x => x.Name))
-                    {
-                        var blobRelativePath = "/" + localizedBlob.Path.TrimStart('/');
-                        var contentItem = _contentItemFactory.GetItemFromPath(blobRelativePath);
-                        if (contentItem != null)
-                        {
-                            if (contentItem.Name == null)
-                            {
-                                contentItem.Name = localizedBlob.Name;
-                            }
-                            contentItem.Language = localizedBlob.Language;
-                            contentItem.FileName = Path.GetFileName(blobRelativePath);
-                            contentItem.StoragePath = "/" + blobRelativePath.Replace(baseStoreContentPath + "/", string.Empty).TrimStart('/');
-
-                            LoadAndRenderContentItem(blobRelativePath, contentItem);
-
-                            retVal.Add(contentItem);
-                        }
-                    }
-                }
+                ProcessContentPath(gitPath, "*.json", retVal);
 
                 return retVal.ToArray();
             });
+        }
+
+        private void ProcessContentPath(string baseStoreContentPath, string searchPattern, List<ContentItem> retVal, string repository = "")
+        {
+            if (_contentBlobProvider.PathExists(baseStoreContentPath))
+            {
+
+                //Search files by requested search pattern
+                var contentBlobs = _contentBlobProvider.Search(baseStoreContentPath, searchPattern, true)
+                                             .Where(x => _extensions.Any(x.EndsWith))
+                                             .Select(x => x.Replace("\\\\", "\\"));
+
+                //each content file  has a name pattern {name}.{language?}.{ext}
+                var localizedBlobs = contentBlobs.Select(x => new LocalizedBlobInfo(x));
+
+                foreach (var localizedBlob in localizedBlobs.OrderBy(x => x.Name))
+                {
+                    var blobRelativePath = "/" + localizedBlob.Path.TrimStart('/');
+                    var contentItem = _contentItemFactory.GetItemFromPath(blobRelativePath);
+                    if (contentItem != null)
+                    {
+                        if (contentItem.Name == null)
+                        {
+                            contentItem.Name = localizedBlob.Name;
+                        }
+                        contentItem.Language = localizedBlob.Language;
+                        contentItem.FileName = Path.GetFileName(blobRelativePath);
+                        contentItem.StoragePath = "/" + blobRelativePath.Replace(baseStoreContentPath + "/", string.Empty).TrimStart('/');
+
+                        LoadAndRenderContentItem(blobRelativePath, contentItem);
+
+                        retVal.Add(contentItem);
+                    }
+                }
+            }
         }
 
         #endregion
@@ -99,6 +113,19 @@ namespace VirtoCommerce.Storefront.Domain
             {
                 //Load raw content with metadata
                 content = stream.ReadToString();
+            }
+
+            if (contentItem is JsonContentPage)
+            {
+                ((JsonContentPage)contentItem).JsonPage = JsonConvert.DeserializeObject<JsonPageDefinition>(content, new JsonPageJsonConverter());
+                ((JsonContentPage)contentItem).JsonPage.Settings["filepath"] = contentPath;
+                ((JsonContentPage)contentItem).JsonPage.Settings["filename"] = Path.GetFileName(contentPath);
+
+                var permalink = ((JsonContentPage)contentItem).JsonPage.Settings["permalink"];
+                if (permalink != null)
+                {
+                    contentItem.Permalink = permalink.ToString();
+                }
             }
 
             IDictionary<string, IEnumerable<string>> metaHeaders;

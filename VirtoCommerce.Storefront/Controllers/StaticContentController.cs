@@ -13,6 +13,7 @@ using System.Xml;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.StaticContent;
+using VirtoCommerce.Storefront.Model.JsonPage;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
@@ -60,7 +61,14 @@ namespace VirtoCommerce.Storefront.Controllers
             var contentPage = page as ContentPage;
             SetCurrentPage(contentPage);
 
-            return View(contentPage.Template, WorkContext);
+            if (page is JsonContentPage)
+            {
+                return View("jsonpage", WorkContext);
+            }
+            else
+            {
+                return View(contentPage.Template, WorkContext);
+            }
         }
 
         // GET: /pages/{page}

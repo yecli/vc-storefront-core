@@ -16,7 +16,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         public string Layout { get; set; }
         /// <summary>
-        /// Merchants can specify a page_description.
+        /// Merchants can specify a     _description.
         /// </summary>
         public string PageDescription { get; set; }
 
@@ -70,6 +70,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         public Vendor Vendor { get; set; }
 
         public Page Page { get; set; }
+        /// <summary>
+        /// Contains settings and blocks for json-page
+        /// </summary>
+        public JsonPage JsonPage { get; set; }
 
         public Blog Blog { get; set; }
 

@@ -142,6 +142,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             if (workContext.CurrentPage != null)
             {
                 result.Page = ToLiquidPage(workContext.CurrentPage);
+                // Making json-definition available in a work context
+                result.JsonPage = result.Page.JsonPage;
             }
 
             if (workContext.CurrentBlog != null)

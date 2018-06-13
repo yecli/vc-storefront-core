@@ -35,11 +35,13 @@ namespace VirtoCommerce.Storefront.Extensions
 
         public static TItem GetOrCreateExclusive<TItem>(this IMemoryCache cache, string key, Func<ICacheEntry, TItem> factory, bool cacheNullValue = true)
         {
-            if (!cache.TryGetValue(key, out object result))
+            object result;
+
+            //if (!cache.TryGetValue(key, out object result))
             {
                 lock (_lockLookup.GetOrAdd(key, new object()))
                 {
-                    if (!cache.TryGetValue(key, out result))
+                    //if (!cache.TryGetValue(key, out result))
                     {
                         var entry = cache.CreateEntry(key);
                         result = factory(entry);
