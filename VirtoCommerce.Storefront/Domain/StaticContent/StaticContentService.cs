@@ -18,6 +18,8 @@ using VirtoCommerce.Storefront.Model.JsonPage;
 using Newtonsoft.Json;
 using VirtoCommerce.LiquidThemeEngine.Converters;
 using VirtoCommerce.Storefront.JsonConverters;
+using Microsoft.Extensions.Options;
+using VirtoCommerce.Storefront.Infrastructure;
 
 namespace VirtoCommerce.Storefront.Domain
 {
@@ -29,20 +31,22 @@ namespace VirtoCommerce.Storefront.Domain
         private static readonly Regex _headerRegExp = new Regex(@"(?s:^---(.*?)---)");
         private static readonly string[] _extensions = { ".md", ".liquid", ".html", ".json" };
         private readonly IStorefrontUrlBuilder _urlBuilder;
-        private readonly IStaticContentItemFactory  _contentItemFactory;
+        private readonly IStaticContentItemFactory _contentItemFactory;
         private readonly IContentBlobProvider _contentBlobProvider;
         private readonly MarkdownPipeline _markdownPipeline;
-        private readonly IMemoryCache _memoryCache; 
+        private readonly IMemoryCache _memoryCache;
         private readonly string _basePath = "Pages";
+        private readonly StorefrontOptions _options;
 
         public StaticContentService(IMemoryCache memoryCache, IWorkContextAccessor workContextAccessor,
                                         IStorefrontUrlBuilder urlBuilder, IStaticContentItemFactory contentItemFactory,
-                                        IContentBlobProvider contentBlobProvider)
+                                        IContentBlobProvider contentBlobProvider, IOptions<StorefrontOptions> options)
         {
             _urlBuilder = urlBuilder;
             _contentItemFactory = contentItemFactory;
             _contentBlobProvider = contentBlobProvider;
-            _memoryCache = memoryCache;        
+            _memoryCache = memoryCache;
+            _options = options.Value;
             _markdownPipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
         }
 
@@ -50,7 +54,7 @@ namespace VirtoCommerce.Storefront.Domain
 
         public IEnumerable<ContentItem> LoadStoreStaticContent(Store store)
         {
-            var gitPath = @"Git/draft";
+            var gitPath = _options.RepositoryPath;  // @"git/draft";
 
             var baseStoreContentPath = _basePath + "/" + store.Id;
             var cacheKey = CacheKey.With(GetType(), "LoadStoreStaticContent", store.Id);
@@ -63,7 +67,10 @@ namespace VirtoCommerce.Storefront.Domain
 
                 ProcessContentPath(baseStoreContentPath, searchPattern, retVal);
 
-                ProcessContentPath(gitPath, "*.json", retVal);
+                if (gitPath != String.Empty)
+                {
+                    //ProcessContentPath(gitPath, "*.json", retVal);
+                }
 
                 return retVal.ToArray();
             });
@@ -141,7 +148,7 @@ namespace VirtoCommerce.Storefront.Domain
                 metaHeaders = new Dictionary<string, IEnumerable<string>>();
             }
 
-            content = RemoveYamlHeader(content);        
+            content = RemoveYamlHeader(content);
 
             //Render markdown content
             if (Path.GetExtension(contentItem.StoragePath).EqualsInvariant(".md"))
@@ -158,7 +165,7 @@ namespace VirtoCommerce.Storefront.Domain
 
             if (string.IsNullOrEmpty(contentItem.Permalink))
             {
-                contentItem.Permalink = ":folder/:categories/:title";           
+                contentItem.Permalink = ":folder/:categories/:title";
             }
             //Transform permalink template to url
             contentItem.Url = GetContentItemUrl(contentItem, contentItem.Permalink);
