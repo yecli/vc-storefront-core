@@ -54,7 +54,7 @@ namespace VirtoCommerce.Storefront.Domain
 
         public IEnumerable<ContentItem> LoadStoreStaticContent(Store store)
         {
-            var gitPath = _options.RepositoryPath;  // @"git/draft";
+            var gitPath = _options.RepositoryPath.ToString();  // @"git/draft";
 
             var baseStoreContentPath = _basePath + "/" + store.Id;
             var cacheKey = CacheKey.With(GetType(), "LoadStoreStaticContent", store.Id);
@@ -69,7 +69,7 @@ namespace VirtoCommerce.Storefront.Domain
 
                 if (gitPath != String.Empty)
                 {
-                    //ProcessContentPath(gitPath, "*.json", retVal);
+                    ProcessContentPath(gitPath, "*.json", retVal);
                 }
 
                 return retVal.ToArray();
