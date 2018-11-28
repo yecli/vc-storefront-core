@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.CustomerReviews;
 using VirtoCommerce.Storefront.Model.Marketing;
 using VirtoCommerce.Storefront.Model.Subscriptions;
 
@@ -284,6 +285,11 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// if the product is sold by subscription only this property contains the recurrence plan
         /// </summary>
         public PaymentPlan PaymentPlan { get; set; }
+
+        /// <summary>
+        /// Product customer reviews
+        /// </summary>
+        public IMutablePagedList<CustomerReview> CustomerReviews { get; set; }
 
         /// <summary>
         /// Apply prices to product

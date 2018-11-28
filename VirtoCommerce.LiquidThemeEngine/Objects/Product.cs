@@ -296,6 +296,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         public string Outline { get; set; }
 
-
+        /// <summary>
+        /// Product customer reviews
+        /// </summary>
+        [DataMember]
+        public IMutablePagedList<CustomerReview> CustomerReviews { get; set; }
     }
 }

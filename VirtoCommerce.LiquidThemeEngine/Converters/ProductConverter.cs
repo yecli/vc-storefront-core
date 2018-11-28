@@ -1,6 +1,6 @@
-using PagedList.Core;
 using System;
 using System.Linq;
+using PagedList.Core;
 using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront.Model.Common;
 using storefrontModel = VirtoCommerce.Storefront.Model.Catalog;
@@ -120,6 +120,15 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.Length = product.Length;
             result.Outline = product.Outline;
 
+            if (product.CustomerReviews != null)
+            {
+                result.CustomerReviews = new MutablePagedList<CustomerReview>((pageNumber, pageSize, sortInfos, @params) =>
+                {
+                    product.CustomerReviews.Slice(pageNumber, pageSize, sortInfos, @params);
+                    return new StaticPagedList<CustomerReview>(product.CustomerReviews.Select(x => x.ToShopifyModel()), product.CustomerReviews);
+                }, product.CustomerReviews.PageNumber, product.CustomerReviews.PageSize);
+            }
+
             if (product.Associations != null)
             {
                 result.RelatedProducts = new MutablePagedList<Product>((pageNumber, pageSize, sortInfos, @params) =>
@@ -166,7 +175,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 Height = product.Height,
                 MeasureUnit = product.MeasureUnit,
                 Width = product.Width,
-                Length = product.Length
+                Length = product.Length,
             };
 
 
